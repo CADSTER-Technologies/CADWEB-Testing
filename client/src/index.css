@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 53% 11%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 11%;
+    --card-foreground: 0 0% 100%;
+    --popover: 210 53% 11%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 188 100% 50%;
+    --primary-foreground: 210 53% 11%;
+    --secondary: 270 100% 50%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 188 100% 50%;
+    --accent-foreground: 210 53% 11%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 188 100% 50%;
+    --radius: 0.5rem;
+  }
+
+  * {
+    @apply border-border;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-inter antialiased;
+    background: #0C1A2B;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-orbitron;
+  }
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+}
+
+canvas {
+  touch-action: none;
+}
+
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.neon-glow-cyan {
+  box-shadow: 0 0 20px rgba(0, 225, 255, 0.5),
+              0 0 40px rgba(0, 225, 255, 0.3),
+              0 0 60px rgba(0, 225, 255, 0.2);
+}
+
+.neon-glow-purple {
+  box-shadow: 0 0 20px rgba(122, 0, 255, 0.5),
+              0 0 40px rgba(122, 0, 255, 0.3),
+              0 0 60px rgba(122, 0, 255, 0.2);
+}
+
+.text-glow-cyan {
+  text-shadow: 0 0 10px rgba(0, 225, 255, 0.8),
+               0 0 20px rgba(0, 225, 255, 0.5);
+}
+
+.text-glow-purple {
+  text-shadow: 0 0 10px rgba(122, 0, 255, 0.8),
+               0 0 20px rgba(122, 0, 255, 0.5);
+}
