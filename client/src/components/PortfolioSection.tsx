@@ -1,8 +1,9 @@
 import { useState, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight, FiEye } from 'react-icons/fi';
 import * as THREE from 'three';
+import { ARVRModal } from './ARVRModal';
 
 function Rotating3DCard({ index }: { index: number }) {
   const meshRef = useRef<THREE.Group>(null);
@@ -36,6 +37,7 @@ function Rotating3DCard({ index }: { index: number }) {
 
 export default function PortfolioSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isARVRModalOpen, setIsARVRModalOpen] = useState(false);
 
   const projects = [
     {
@@ -73,7 +75,13 @@ export default function PortfolioSection() {
   };
 
   return (
-    <section id="portfolio" className="relative py-20 md:py-32 bg-gradient-to-b from-navy via-graphite to-navy overflow-hidden">
+    <>
+      <ARVRModal
+        isOpen={isARVRModalOpen}
+        onClose={() => setIsARVRModalOpen(false)}
+        title={projects[currentIndex].title}
+      />
+      <section id="portfolio" className="relative py-20 md:py-32 bg-gradient-to-b from-navy via-graphite to-navy overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -126,7 +134,7 @@ export default function PortfolioSection() {
                   {projects[currentIndex].description}
                 </p>
 
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-3 mb-6">
                   {projects[currentIndex].tech.map((tech, index) => (
                     <span
                       key={index}
@@ -136,6 +144,14 @@ export default function PortfolioSection() {
                     </span>
                   ))}
                 </div>
+
+                <button
+                  onClick={() => setIsARVRModalOpen(true)}
+                  className="px-6 py-3 bg-gradient-to-r from-cyan to-purple rounded-lg text-white font-inter font-semibold neon-glow-cyan hover:scale-105 transition-transform flex items-center gap-2"
+                >
+                  <FiEye className="text-lg" />
+                  View in 3D/AR/VR
+                </button>
               </div>
             </motion.div>
           </AnimatePresence>
@@ -172,5 +188,6 @@ export default function PortfolioSection() {
         </div>
       </div>
     </section>
+    </>
   );
 }

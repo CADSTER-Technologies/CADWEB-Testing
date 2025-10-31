@@ -7,6 +7,7 @@ import ServicesSection from "./components/ServicesSection";
 import PortfolioSection from "./components/PortfolioSection";
 import TechnologySection from "./components/TechnologySection";
 import DataFlowSection from "./components/DataFlowSection";
+import ModelViewer from "./components/ModelViewer";
 import TestimonialsSection from "./components/TestimonialsSection";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
@@ -39,6 +40,10 @@ function AppContent() {
       <PortfolioSection />
       <TechnologySection />
       <DataFlowSection />
+      <ModelViewer 
+        title="3D CAD Visualization"
+        description="Experience next-generation CAD model visualization with WebGL-powered rendering"
+      />
       <TestimonialsSection />
       <ContactSection />
       <Footer />
