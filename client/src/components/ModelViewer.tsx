@@ -3,6 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, OrbitControls, Environment, PerspectiveCamera } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
+import { CanvasErrorBoundary } from './CanvasErrorBoundary';
 
 function LoadingSpinner() {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -69,20 +70,22 @@ export default function ModelViewer({
         </motion.div>
 
         <div className="relative h-[600px] glass-morphism rounded-2xl overflow-hidden">
-          <Canvas>
-            <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={50} />
-            <OrbitControls enableZoom enablePan={false} autoRotate autoRotateSpeed={1} />
-            
-            <ambientLight intensity={0.5} />
-            <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} color="#00E1FF" />
-            <spotLight position={[-10, -10, -10]} angle={0.15} penumbra={1} intensity={0.5} color="#7A00FF" />
-            <pointLight position={[0, 5, 0]} intensity={0.5} color="#ffffff" />
+          <CanvasErrorBoundary>
+            <Canvas>
+              <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={50} />
+              <OrbitControls enableZoom enablePan={false} autoRotate autoRotateSpeed={1} />
+              
+              <ambientLight intensity={0.5} />
+              <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} color="#00E1FF" />
+              <spotLight position={[-10, -10, -10]} angle={0.15} penumbra={1} intensity={0.5} color="#7A00FF" />
+              <pointLight position={[0, 5, 0]} intensity={0.5} color="#ffffff" />
 
-            <Suspense fallback={<LoadingSpinner />}>
-              <Model3D modelPath={modelPath} />
-              <Environment preset="city" />
-            </Suspense>
-          </Canvas>
+              <Suspense fallback={<LoadingSpinner />}>
+                <Model3D modelPath={modelPath} />
+                <Environment preset="city" />
+              </Suspense>
+            </Canvas>
+          </CanvasErrorBoundary>
 
           <div className="absolute top-4 right-4 glass-morphism rounded-lg px-4 py-2">
             <p className="text-white/90 font-inter text-sm">Interactive 3D Model - Drag to rotate</p>

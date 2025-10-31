@@ -4,6 +4,7 @@ import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import { VideoModal } from './VideoModal';
+import { CanvasErrorBoundary } from './CanvasErrorBoundary';
 
 function CADWireframe() {
   const meshRef = useRef<THREE.Group>(null);
@@ -87,7 +88,8 @@ export default function HeroSection() {
       <VideoModal isOpen={isVideoModalOpen} onClose={() => setIsVideoModalOpen(false)} />
       <section id="home" className="relative h-screen w-full overflow-hidden bg-gradient-to-b from-navy via-graphite to-navy">
       <div className="absolute inset-0">
-        <Canvas>
+        <CanvasErrorBoundary>
+          <Canvas>
           <PerspectiveCamera makeDefault position={[0, 0, 10]} />
           <OrbitControls
             enableZoom={false}
@@ -102,6 +104,7 @@ export default function HeroSection() {
           <pointLight position={[-10, -10, 10]} intensity={0.5} color="#7A00FF" />
           <CADWireframe />
         </Canvas>
+        </CanvasErrorBoundary>
       </div>
 
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-navy/50 to-navy" />

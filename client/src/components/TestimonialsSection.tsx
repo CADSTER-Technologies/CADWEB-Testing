@@ -3,6 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { motion } from 'framer-motion';
 import { FiStar } from 'react-icons/fi';
 import * as THREE from 'three';
+import { CanvasErrorBoundary } from './CanvasErrorBoundary';
 
 function FloatingTestimonialSpheres() {
   const groupRef = useRef<THREE.Group>(null);
@@ -80,12 +81,14 @@ export default function TestimonialsSection() {
   return (
     <section className="relative py-20 md:py-32 bg-gradient-to-b from-navy via-graphite to-navy overflow-hidden">
       <div className="absolute inset-0 opacity-20">
-        <Canvas camera={{ position: [0, 0, 12], fov: 50 }}>
-          <ambientLight intensity={0.5} />
-          <pointLight position={[10, 10, 10]} color="#00E1FF" intensity={1} />
-          <pointLight position={[-10, -10, -10]} color="#7A00FF" intensity={0.8} />
-          <FloatingTestimonialSpheres />
-        </Canvas>
+        <CanvasErrorBoundary>
+          <Canvas camera={{ position: [0, 0, 12], fov: 50 }}>
+            <ambientLight intensity={0.5} />
+            <pointLight position={[10, 10, 10]} color="#00E1FF" intensity={1} />
+            <pointLight position={[-10, -10, -10]} color="#7A00FF" intensity={0.8} />
+            <FloatingTestimonialSpheres />
+          </Canvas>
+        </CanvasErrorBoundary>
       </div>
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div

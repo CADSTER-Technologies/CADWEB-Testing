@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { SiAutodesk, SiUnity, SiUnrealengine } from 'react-icons/si';
 import { FiBox, FiCpu, FiLayers } from 'react-icons/fi';
 import * as THREE from 'three';
+import { CanvasErrorBoundary } from './CanvasErrorBoundary';
 
 function FloatingTechIcons() {
   const groupRef = useRef<THREE.Group>(null);
@@ -62,12 +63,14 @@ export default function TechnologySection() {
   return (
     <section id="technology" className="relative py-20 md:py-32 bg-gradient-to-b from-navy via-graphite to-navy overflow-hidden">
       <div className="absolute inset-0 opacity-30">
-        <Canvas camera={{ position: [0, 0, 12], fov: 60 }}>
-          <ambientLight intensity={0.5} />
-          <pointLight position={[10, 10, 10]} color="#00E1FF" intensity={1} />
-          <pointLight position={[-10, -10, 10]} color="#7A00FF" intensity={0.8} />
-          <FloatingTechIcons />
-        </Canvas>
+        <CanvasErrorBoundary>
+          <Canvas camera={{ position: [0, 0, 12], fov: 60 }}>
+            <ambientLight intensity={0.5} />
+            <pointLight position={[10, 10, 10]} color="#00E1FF" intensity={1} />
+            <pointLight position={[-10, -10, 10]} color="#7A00FF" intensity={0.8} />
+            <FloatingTechIcons />
+          </Canvas>
+        </CanvasErrorBoundary>
       </div>
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div

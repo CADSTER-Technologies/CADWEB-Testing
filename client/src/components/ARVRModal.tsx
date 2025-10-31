@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { OrbitControls, PerspectiveCamera, useGLTF } from '@react-three/drei';
 import { FiX, FiMaximize, FiRefreshCw } from 'react-icons/fi';
 import * as THREE from 'three';
+import { CanvasErrorBoundary } from './CanvasErrorBoundary';
 
 function LoadingSpinner() {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -97,21 +98,23 @@ export function ARVRModal({ isOpen, onClose, title, modelPath = '/geometries/hea
 
               <div className="relative flex-1 bg-gradient-to-b from-navy/50 to-graphite/50">
                 {viewMode === '3d' && (
-                  <Canvas>
-                    <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={50} />
-                    <OrbitControls enableZoom enablePan autoRotate autoRotateSpeed={2} />
-                    
-                    <ambientLight intensity={0.5} />
-                    <spotLight position={[10, 10, 10]} angle={0.3} penumbra={1} intensity={1} color="#00E1FF" />
-                    <spotLight position={[-10, -10, -10]} angle={0.3} penumbra={1} intensity={0.5} color="#7A00FF" />
-                    <pointLight position={[0, 5, 0]} intensity={0.5} />
+                  <CanvasErrorBoundary>
+                    <Canvas>
+                      <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={50} />
+                      <OrbitControls enableZoom enablePan autoRotate autoRotateSpeed={2} />
+                      
+                      <ambientLight intensity={0.5} />
+                      <spotLight position={[10, 10, 10]} angle={0.3} penumbra={1} intensity={1} color="#00E1FF" />
+                      <spotLight position={[-10, -10, -10]} angle={0.3} penumbra={1} intensity={0.5} color="#7A00FF" />
+                      <pointLight position={[0, 5, 0]} intensity={0.5} />
 
-                    <Suspense fallback={<LoadingSpinner />}>
-                      <ARVRModel modelPath={modelPath} />
-                    </Suspense>
+                      <Suspense fallback={<LoadingSpinner />}>
+                        <ARVRModel modelPath={modelPath} />
+                      </Suspense>
 
-                    <gridHelper args={[10, 10, '#00E1FF', '#7A00FF']} position={[0, -2, 0]} />
-                  </Canvas>
+                      <gridHelper args={[10, 10, '#00E1FF', '#7A00FF']} position={[0, -2, 0]} />
+                    </Canvas>
+                  </CanvasErrorBoundary>
                 )}
 
                 {viewMode === 'ar' && (

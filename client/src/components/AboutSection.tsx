@@ -3,6 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Sphere } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
+import { CanvasErrorBoundary } from './CanvasErrorBoundary';
 
 function HolographicGlobe() {
   const groupRef = useRef<THREE.Group>(null);
@@ -106,12 +107,14 @@ export default function AboutSection() {
             viewport={{ once: true }}
             className="h-[400px] md:h-[600px]"
           >
-            <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
-              <ambientLight intensity={0.5} />
-              <pointLight position={[10, 10, 10]} color="#00E1FF" intensity={1} />
-              <pointLight position={[-10, -10, -10]} color="#7A00FF" intensity={0.5} />
-              <HolographicGlobe />
-            </Canvas>
+            <CanvasErrorBoundary>
+              <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
+                <ambientLight intensity={0.5} />
+                <pointLight position={[10, 10, 10]} color="#00E1FF" intensity={1} />
+                <pointLight position={[-10, -10, -10]} color="#7A00FF" intensity={0.5} />
+                <HolographicGlobe />
+              </Canvas>
+            </CanvasErrorBoundary>
           </motion.div>
         </div>
       </div>

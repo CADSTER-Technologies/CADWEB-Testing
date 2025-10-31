@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiChevronLeft, FiChevronRight, FiEye } from 'react-icons/fi';
 import * as THREE from 'three';
 import { ARVRModal } from './ARVRModal';
+import { CanvasErrorBoundary } from './CanvasErrorBoundary';
 
 function Rotating3DCard({ index }: { index: number }) {
   const meshRef = useRef<THREE.Group>(null);
@@ -100,14 +101,16 @@ export default function PortfolioSection() {
 
         <div className="relative">
           <div className="absolute top-0 left-0 right-0 h-48 -mt-12">
-            <Canvas camera={{ position: [0, 0, 8], fov: 50 }}>
-              <ambientLight intensity={0.5} />
-              <pointLight position={[10, 10, 10]} color="#00E1FF" intensity={1} />
-              <pointLight position={[-10, -10, 10]} color="#7A00FF" intensity={0.5} />
-              {[0, 1, 2, 3].map((i) => (
-                <Rotating3DCard key={i} index={i} />
-              ))}
-            </Canvas>
+            <CanvasErrorBoundary>
+              <Canvas camera={{ position: [0, 0, 8], fov: 50 }}>
+                <ambientLight intensity={0.5} />
+                <pointLight position={[10, 10, 10]} color="#00E1FF" intensity={1} />
+                <pointLight position={[-10, -10, 10]} color="#7A00FF" intensity={0.5} />
+                {[0, 1, 2, 3].map((i) => (
+                  <Rotating3DCard key={i} index={i} />
+                ))}
+              </Canvas>
+            </CanvasErrorBoundary>
           </div>
 
           <AnimatePresence mode="wait">

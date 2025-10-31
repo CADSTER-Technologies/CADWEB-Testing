@@ -3,6 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import { FiSettings, FiZap, FiBox, FiEye, FiDatabase } from 'react-icons/fi';
+import { CanvasErrorBoundary } from './CanvasErrorBoundary';
 
 function FloatingCard3D({ isHovered }: { isHovered: boolean }) {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -52,11 +53,13 @@ function ServiceCard({ icon, title, description, index }: ServiceCardProps) {
       
       <div className="relative h-full glass-morphism rounded-xl p-6 hover:neon-glow-cyan transition-all duration-300 cursor-pointer">
         <div className="absolute top-0 right-0 w-32 h-32 opacity-30">
-          <Canvas camera={{ position: [0, 0, 5] }}>
-            <ambientLight intensity={0.5} />
-            <pointLight position={[10, 10, 10]} color="#00E1FF" />
-            <FloatingCard3D isHovered={isHovered} />
-          </Canvas>
+          <CanvasErrorBoundary>
+            <Canvas camera={{ position: [0, 0, 5] }}>
+              <ambientLight intensity={0.5} />
+              <pointLight position={[10, 10, 10]} color="#00E1FF" />
+              <FloatingCard3D isHovered={isHovered} />
+            </Canvas>
+          </CanvasErrorBoundary>
         </div>
 
         <div className="relative z-10">

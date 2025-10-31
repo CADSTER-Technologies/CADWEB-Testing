@@ -2,6 +2,7 @@ import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
+import { CanvasErrorBoundary } from './CanvasErrorBoundary';
 
 function DataNode({ position, color, label }: { position: [number, number, number]; color: string; label: string }) {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -158,12 +159,14 @@ export default function DataFlowSection() {
         </motion.div>
 
         <div className="relative h-[500px] glass-morphism rounded-2xl overflow-hidden">
-          <Canvas camera={{ position: [0, 0, 8], fov: 60 }}>
-            <ambientLight intensity={0.5} />
-            <pointLight position={[10, 10, 10]} color="#00E1FF" intensity={1} />
-            <pointLight position={[-10, -10, 10]} color="#7A00FF" intensity={0.8} />
-            <DataFlow />
-          </Canvas>
+          <CanvasErrorBoundary>
+            <Canvas camera={{ position: [0, 0, 8], fov: 60 }}>
+              <ambientLight intensity={0.5} />
+              <pointLight position={[10, 10, 10]} color="#00E1FF" intensity={1} />
+              <pointLight position={[-10, -10, 10]} color="#7A00FF" intensity={0.8} />
+              <DataFlow />
+            </Canvas>
+          </CanvasErrorBoundary>
 
           <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-4 px-4 flex-wrap">
             {['CAD Input', 'Process', 'PLM Integration', 'Automation', 'Output'].map((label, index) => (
