@@ -57,9 +57,39 @@ export default function ContactSection() {
     message: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitStatus({ type: 'success', message: data.message });
+        setFormData({ name: '', email: '', company: '', message: '' });
+      } else {
+        setSubmitStatus({ type: 'error', message: data.message });
+      }
+    } catch (error) {
+      setSubmitStatus({ 
+        type: 'error', 
+        message: 'Network error. Please try again later.' 
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -155,11 +185,18 @@ export default function ContactSection() {
                 />
               </div>
 
+              {submitStatus && (
+                <div className={`p-4 rounded-lg ${submitStatus.type === 'success' ? 'bg-cyan/20 border border-cyan' : 'bg-red-500/20 border border-red-500'}`}>
+                  <p className="text-white font-inter text-sm">{submitStatus.message}</p>
+                </div>
+              )}
+
               <button
                 type="submit"
-                className="w-full px-8 py-4 bg-gradient-to-r from-cyan to-purple rounded-lg text-white font-inter font-semibold text-lg neon-glow-cyan hover:scale-105 transition-transform"
+                disabled={isSubmitting}
+                className="w-full px-8 py-4 bg-gradient-to-r from-cyan to-purple rounded-lg text-white font-inter font-semibold text-lg neon-glow-cyan hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Get in Touch
+                {isSubmitting ? 'Sending...' : 'Get in Touch'}
               </button>
             </form>
           </motion.div>

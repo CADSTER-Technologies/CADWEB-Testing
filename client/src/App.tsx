@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
+import { ThemeProvider } from "./components/ThemeProvider";
 import Navigation from "./components/Navigation";
 import HeroSection from "./components/HeroSection";
 import AboutSection from "./components/AboutSection";
 import ServicesSection from "./components/ServicesSection";
 import PortfolioSection from "./components/PortfolioSection";
 import TechnologySection from "./components/TechnologySection";
+import DataFlowSection from "./components/DataFlowSection";
 import TestimonialsSection from "./components/TestimonialsSection";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
 
-function App() {
+function AppContent() {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -36,10 +38,19 @@ function App() {
       <ServicesSection />
       <PortfolioSection />
       <TechnologySection />
+      <DataFlowSection />
       <TestimonialsSection />
       <ContactSection />
       <Footer />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }
 

@@ -26,6 +26,28 @@
     --radius: 0.5rem;
   }
 
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 210 53% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 53% 11%;
+    --popover: 0 0% 98%;
+    --popover-foreground: 210 53% 11%;
+    --primary: 188 100% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 270 100% 40%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 92%;
+    --muted-foreground: 0 0% 30%;
+    --accent: 188 100% 40%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 85%;
+    --input: 0 0% 85%;
+    --ring: 188 100% 40%;
+  }
+
   * {
     @apply border-border;
     margin: 0;
@@ -39,12 +61,21 @@
 
   body {
     @apply font-inter antialiased;
-    background: #0C1A2B;
-    color: #FFFFFF;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
     overflow-y: auto;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  body.dark {
+    background: #0C1A2B;
+    color: #FFFFFF;
+  }
+
+  body.light {
+    background: linear-gradient(to bottom, #F8FAFC, #E2E8F0, #F8FAFC);
+    color: #0C1A2B;
   }
 
   h1, h2, h3, h4, h5, h6 {

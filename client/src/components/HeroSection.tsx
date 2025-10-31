@@ -1,8 +1,9 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
+import { VideoModal } from './VideoModal';
 
 function CADWireframe() {
   const meshRef = useRef<THREE.Group>(null);
@@ -79,8 +80,12 @@ function CADWireframe() {
 }
 
 export default function HeroSection() {
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
   return (
-    <section id="home" className="relative h-screen w-full overflow-hidden bg-gradient-to-b from-navy via-graphite to-navy">
+    <>
+      <VideoModal isOpen={isVideoModalOpen} onClose={() => setIsVideoModalOpen(false)} />
+      <section id="home" className="relative h-screen w-full overflow-hidden bg-gradient-to-b from-navy via-graphite to-navy">
       <div className="absolute inset-0">
         <Canvas>
           <PerspectiveCamera makeDefault position={[0, 0, 10]} />
@@ -133,7 +138,10 @@ export default function HeroSection() {
             <button className="px-8 py-4 bg-gradient-to-r from-cyan to-purple rounded-lg text-white font-inter font-semibold text-lg neon-glow-cyan hover:scale-105 transition-transform">
               Explore Solutions
             </button>
-            <button className="px-8 py-4 glass-morphism rounded-lg text-white font-inter font-semibold text-lg hover:neon-glow-purple hover:scale-105 transition-all">
+            <button
+              onClick={() => setIsVideoModalOpen(true)}
+              className="px-8 py-4 glass-morphism rounded-lg text-white font-inter font-semibold text-lg hover:neon-glow-purple hover:scale-105 transition-all"
+            >
               Watch Demo
             </button>
           </motion.div>
@@ -155,5 +163,6 @@ export default function HeroSection() {
         </div>
       </motion.div>
     </section>
+    </>
   );
 }
