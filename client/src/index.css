@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Orbitron:wght@400;700&display=swap');
+
+@layer base {
+  :root {
+    /* Color Variables */
+    --background: hsl(210, 53%, 11%);
+    --foreground: hsl(0, 0%, 100%);
+    --card: hsl(0, 0%, 11%);
+    --card-foreground: hsl(0, 0%, 100%);
+    --popover: hsl(210, 53%, 11%);
+    --popover-foreground: hsl(0, 0%, 100%);
+    --primary: hsl(188, 100%, 50%);
+    --primary-foreground: hsl(210, 53%, 11%);
+    --secondary: hsl(270, 100%, 50%);
+    --secondary-foreground: hsl(0, 0%, 100%);
+    --muted: hsl(0, 0%, 15%);
+    --muted-foreground: hsl(0, 0%, 70%);
+    --accent: hsl(188, 100%, 50%);
+    --accent-foreground: hsl(210, 53%, 11%);
+    --destructive: hsl(0, 84%, 60%);
+    --destructive-foreground: hsl(0, 0%, 100%);
+    --border: hsl(0, 0%, 20%);
+    --input: hsl(0, 0%, 20%);
+    --ring: hsl(188, 100%, 50%);
+    --radius: 0.5rem;
+
+    /* Font */
+    --font-sans: 'Inter', sans-serif;
+    --font-display: 'Orbitron', sans-serif;
+  }
+
+  /* Light Theme Override */
+  .light {
+    --background: hsl(0, 0%, 98%);
+    --foreground: hsl(210, 53%, 11%);
+    --card: hsl(0, 0%, 100%);
+    --card-foreground: hsl(210, 53%, 11%);
+    --popover: hsl(0, 0%, 98%);
+    --popover-foreground: hsl(210, 53%, 11%);
+    --primary: hsl(188, 100%, 40%);
+    --primary-foreground: hsl(0, 0%, 100%);
+    --secondary: hsl(270, 100%, 40%);
+    --secondary-foreground: hsl(0, 0%, 100%);
+    --muted: hsl(0, 0%, 92%);
+    --muted-foreground: hsl(0, 0%, 30%);
+    --accent: hsl(188, 100%, 40%);
+    --accent-foreground: hsl(0, 0%, 100%);
+    --destructive: hsl(0, 84%, 50%);
+    --destructive-foreground: hsl(0, 0%, 100%);
+    --border: hsl(0, 0%, 85%);
+    --input: hsl(0, 0%, 85%);
+    --ring: hsl(188, 100%, 40%);
+  }
+
+  /* Base Styles */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    @apply antialiased;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+
+  #root {
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  canvas {
+    touch-action: none;
+  }
+
+  /* Glassmorphism */
+  .glass-morphism {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius);
+  }
+
+  /* Neon Effects */
+  .neon-glow-cyan {
+    box-shadow:
+      0 0 10px rgba(0, 225, 255, 0.6),
+      0 0 20px rgba(0, 225, 255, 0.4),
+      0 0 40px rgba(0, 225, 255, 0.2);
+  }
+
+  .neon-glow-purple {
+    box-shadow:
+      0 0 10px rgba(122, 0, 255, 0.6),
+      0 0 20px rgba(122, 0, 255, 0.4),
+      0 0 40px rgba(122, 0, 255, 0.2);
+  }
+
+  .text-glow-cyan {
+    text-shadow:
+      0 0 8px rgba(0, 225, 255, 0.8),
+      0 0 16px rgba(0, 225, 255, 0.5);
+  }
+
+  .text-glow-purple {
+    text-shadow:
+      0 0 8px rgba(122, 0, 255, 0.8),
+      0 0 16px rgba(122, 0, 255, 0.5);
+  }
+}
