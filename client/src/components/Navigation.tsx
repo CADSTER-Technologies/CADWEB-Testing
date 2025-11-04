@@ -38,10 +38,10 @@ export default function Navigation() {
             className="flex items-center space-x-2"
           >
             <div className="w-10 h-10 bg-gradient-to-br from-cyan to-purple rounded-lg flex items-center justify-center">
-              <span className="text-white font-orbitron font-bold text-xl">C</span>
+              <span className="text-white font-orbitron font-bold text-xl"><img src="/logo/cadster_logo.jpeg" alt="Cadster Logo" className="w-12 h-12 object-contain" /></span>
             </div>
             <span className="text-white font-orbitron font-bold text-xl hidden sm:block">
-              Cadster <span className="text-cyan">Tech</span>
+              Cadster <span className="text-cyan"></span>
             </span>
           </motion.div>
 

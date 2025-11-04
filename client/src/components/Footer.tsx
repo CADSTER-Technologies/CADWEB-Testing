@@ -16,7 +16,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-white/70 font-inter mb-4 max-w-md">
-              Engineering the future of design automation with cutting-edge CAD/PLM solutions, 
+              Engineering the future of design automation with cutting-edge CAD/PLM solutions,
               3D visualization, and AR/VR technologies.
             </p>
             <div className="flex gap-4">
@@ -50,7 +50,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start gap-2 text-white/70 font-inter">
                 <FiMapPin className="text-cyan mt-1 flex-shrink-0" />
-                <span>Pune, Maharashtra, India</span>
+                <span>33,JN Road Near Karur Vysya Bank,Anakaputhur,Chennai-600070,Tamilnadu,India</span>
               </li>
               <li className="flex items-center gap-2 text-white/70 font-inter">
                 <FiMail className="text-cyan flex-shrink-0" />
@@ -58,16 +58,33 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2 text-white/70 font-inter">
                 <FiPhone className="text-cyan flex-shrink-0" />
-                <span>+91 (000) 000-0000</span>
+                <span>+91 8508928087</span>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-8 text-center">
-          <p className="text-white/50 font-inter text-sm">
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+
+          <p className="text-white/50 font-inter text-sm text-center md:text-left">
             © 2023-2024 Cadster Technologies. All rights reserved. | Innovating Design Automation
           </p>
+
+          <div className="flex gap-6 text-sm font-inter">
+            {[
+              { name: 'License', href: '#' },
+              { name: 'Terms & Conditions', href: '#' },
+              { name: 'Privacy Policy', href: '#' },
+            ].map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                className="text-white/70 hover:text-cyan transition-colors cursor-pointer no-underline"
+              >
+                {link.name}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </footer>
