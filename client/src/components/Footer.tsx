@@ -1,5 +1,6 @@
 import { FiMail, FiPhone, FiMapPin } from 'react-icons/fi';
-import { FaLinkedin, FaTwitter, FaGithub } from 'react-icons/fa';
+import { FaLinkedin, FaTwitter, FaGithub, FaInstagram, FaFacebook } from 'react-icons/fa';
+import { Target } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -9,25 +10,27 @@ export default function Footer() {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
               <div className="w-10 h-10 bg-gradient-to-br from-cyan to-purple rounded-lg flex items-center justify-center">
-                <span className="text-white font-orbitron font-bold text-xl">C</span>
+                <span className="text-white font-orbitron font-bold text-xl"><img src="logo/cadster_logo.png" alt="Cadster logo" /></span>
               </div>
               <span className="text-white font-orbitron font-bold text-xl">
-                Cadster <span className="text-cyan">Technologies</span>
+                CADSTER <span className="text-cyan">TECHNOLOGIES</span>
               </span>
             </div>
             <p className="text-white/70 font-inter mb-4 max-w-md">
-              Engineering the future of design automation with cutting-edge CAD/PLM solutions,
-              3D visualization, and AR/VR technologies.
+              Engineering the future of design automation with cutting-edge CAD/PLM solutions.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 glass-morphism rounded-lg flex items-center justify-center text-cyan hover:neon-glow-cyan transition-all">
+              <a href="https://www.linkedin.com/company/cadster?originalSubdomain=in" target="_blank" rel="noopener noreferrer" className="w-10 h-10 glass-morphism rounded-lg flex items-center justify-center text-cyan hover:neon-glow-cyan transition-all">
                 <FaLinkedin className="text-xl" />
               </a>
               <a href="#" className="w-10 h-10 glass-morphism rounded-lg flex items-center justify-center text-cyan hover:neon-glow-cyan transition-all">
                 <FaTwitter className="text-xl" />
               </a>
               <a href="#" className="w-10 h-10 glass-morphism rounded-lg flex items-center justify-center text-cyan hover:neon-glow-cyan transition-all">
-                <FaGithub className="text-xl" />
+                <FaInstagram className="text-xl" />
+              </a>
+              <a href="#" className="w-10 h-10 glass-morphism rounded-lg flex items-center justify-center text-cyan hover:neon-glow-cyan transition-all">
+                <FaFacebook className="text-xl" />
               </a>
             </div>
           </div>
@@ -54,7 +57,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2 text-white/70 font-inter">
                 <FiMail className="text-cyan flex-shrink-0" />
-                <span>info@cadster.tech</span>
+                <span>services@cadster.in</span>
               </li>
               <li className="flex items-center gap-2 text-white/70 font-inter">
                 <FiPhone className="text-cyan flex-shrink-0" />
@@ -67,14 +70,14 @@ export default function Footer() {
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
 
           <p className="text-white/50 font-inter text-sm text-center md:text-left">
-            © 2023-2024 Cadster Technologies. All rights reserved. | Innovating Design Automation
+            © 2023-2025 Cadster Technologies. All rights reserved. | Innovating Design Automation
           </p>
 
           <div className="flex gap-6 text-sm font-inter">
             {[
-              { name: 'License', href: '#' },
-              { name: 'Terms & Conditions', href: '#' },
-              { name: 'Privacy Policy', href: '#' },
+              { name: 'License', href: '/license', newTab: true },
+              { name: 'Terms & Conditions', href: '/terms', newTab: true },
+              { name: 'Privacy Policy', href: '/privacy', newTab: true },
             ].map((link) => (
               <a
                 key={link.name}

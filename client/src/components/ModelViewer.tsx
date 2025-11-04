@@ -111,7 +111,7 @@ function CadsterText3D() {
 
         {/* A */}
         <Text3D
-          position={[0.9, 0, 0]}
+          position={[1.1, 0, 0]}
           font="/fonts/helvetiker_regular.typeface.json"
           size={1}
           height={0.35}
@@ -125,7 +125,7 @@ function CadsterText3D() {
 
         {/* D (half red/green + mirror) */}
         <Text3D
-          position={[1.8, 0, 0]}
+          position={[2.2, 0, 0]}
           font="/fonts/helvetiker_regular.typeface.json"
           size={1}
           height={0.35}
@@ -139,7 +139,7 @@ function CadsterText3D() {
 
         {/* S (green) */}
         <Text3D
-          position={[2.7, 0, 0]}
+          position={[3.3, 0, 0]}
           font="/fonts/helvetiker_regular.typeface.json"
           size={1}
           height={0.35}
@@ -153,7 +153,7 @@ function CadsterText3D() {
 
         {/* T (green-blue blend mirror) */}
         <Text3D
-          position={[3.6, 0, 0]}
+          position={[4.3, 0, 0]}
           font="/fonts/helvetiker_regular.typeface.json"
           size={1}
           height={0.35}
@@ -167,7 +167,7 @@ function CadsterText3D() {
 
         {/* E (blue) */}
         <Text3D
-          position={[4.5, 0, 0]}
+          position={[5.3, 0, 0]}
           font="/fonts/helvetiker_regular.typeface.json"
           size={1}
           height={0.35}
@@ -181,7 +181,7 @@ function CadsterText3D() {
 
         {/* R (blue) */}
         <Text3D
-          position={[5.4, 0, 0]}
+          position={[6.3, 0, 0]}
           font="/fonts/helvetiker_regular.typeface.json"
           size={1}
           height={0.35}
@@ -232,16 +232,7 @@ export default function ModelViewer({ title, description }: ModelViewerProps) {
           className="relative max-w-5xl mx-auto"
         >
           <div className="aspect-video bg-card/50 backdrop-blur-sm rounded-xl border border-border/50 overflow-hidden shadow-2xl">
-            <CanvasErrorBoundary
-              fallback={
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="text-6xl mb-4 text-glow-cyan font-bold">CADSTER</div>
-                    <p className="text-muted-foreground">3D visualization loading...</p>
-                  </div>
-                </div>
-              }
-            >
+            <CanvasErrorBoundary>
               <Canvas shadows camera={{ position: [0, 0, 8], fov: 50 }}>
                 <OrbitControls
                   enableZoom

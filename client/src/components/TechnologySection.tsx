@@ -3,6 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import { CanvasErrorBoundary } from './CanvasErrorBoundary';
+import ImageLogo from './ImageLogo';
 
 function FloatingTechIcons() {
   const groupRef = useRef<THREE.Group>(null);
@@ -27,20 +28,17 @@ function FloatingTechIcons() {
 
   return (
     <group ref={groupRef}>
-      {positions.map((pos, i) => {
-        const [x, y, z] = pos;
-        return (
-          <mesh key={i} position={[x, y, z]}>
-            <octahedronGeometry args={[0.3, 0]} />
-            <meshStandardMaterial
-              color={i % 2 === 0 ? '#00E1FF' : '#7A00FF'}
-              emissive={i % 2 === 0 ? '#00E1FF' : '#7A00FF'}
-              emissiveIntensity={0.5}
-              wireframe
-            />
-          </mesh>
-        );
-      })}
+      {positions.map(([x, y, z], i) => (
+        <mesh key={i} position={[x, y, z]}>
+          <octahedronGeometry args={[0.3, 0]} />
+          <meshStandardMaterial
+            color={i % 2 === 0 ? '#00E1FF' : '#7A00FF'}
+            emissive={i % 2 === 0 ? '#00E1FF' : '#7A00FF'}
+            emissiveIntensity={0.5}
+            wireframe
+          />
+        </mesh>
+      ))}
       <mesh>
         <torusGeometry args={[4, 0.05, 16, 100]} />
         <meshStandardMaterial color="#00E1FF" emissive="#00E1FF" emissiveIntensity={0.3} />
@@ -53,16 +51,28 @@ function FloatingTechIcons() {
   );
 }
 
+// HD transparent PNG metadata (files in /public/logos/)
+const logoMeta: Record<string, { src: string; aspect: number }> = {
+  Creo: { src: '/logo/creo.png', aspect: 851 / 512 },
+  SolidWorks: { src: '/logo/solidworks.png', aspect: 903 / 512 },
+  AutoCAD: { src: '/logo/autocad.png', aspect: 512 / 512 },
+  Revit: { src: '/logo/revit.png', aspect: 512 / 512 },
+  Windchill: { src: '/logo/windchill.png', aspect: 512 / 512 },
+  Inventor: { src: '/logo/inventor.png', aspect: 512 / 512 },
+  Unity: { src: '/logo/unity.png', aspect: 581 / 512 },
+  'Unreal Engine': { src: '/logo/unreal.png', aspect: 983 / 512 },
+};
+
 export default function TechnologySection() {
-  const technologies = [
-    { name: 'Creo', icon: '/icons/creo.png', color: 'from-green-400 to-green-600' },
-    { name: 'SolidWorks', icon: '/icons/solidworks.png', color: 'from-red-500 to-red-700' },
-    { name: 'AutoCAD', icon: '/icons/autocad.png', color: 'from-rose-500 to-red-700' },
-    { name: 'Revit', icon: '/icons/revit.png', color: 'from-blue-400 to-blue-700' },
-    { name: 'Windchill', icon: '/icons/windchill.png', color: 'from-purple-400 to-purple-600' },
-    { name: 'Inventor', icon: '/icons/inventor.png', color: 'from-amber-400 to-orange-600' },
-    { name: 'Unity', icon: '/icons/unity.png', color: 'from-gray-700 to-gray-900' },
-    { name: 'Unreal Engine', icon: '/icons/unreal.png', color: 'from-cyan-400 to-blue-600' },
+  const technologies: Array<{ name: keyof typeof logoMeta; color: string }> = [
+    { name: 'Creo', color: 'from-cyan to-blue-400' },
+    { name: 'SolidWorks', color: 'from-red-500 to-red-600' },
+    { name: 'AutoCAD', color: 'from-red-600 to-red-700' },
+    { name: 'Revit', color: 'from-blue-500 to-blue-600' },
+    { name: 'Windchill', color: 'from-purple to-purple-600' },
+    { name: 'Inventor', color: 'from-yellow-500 to-orange-500' },
+    { name: 'Unity', color: 'from-gray-700 to-gray-900' },
+    { name: 'Unreal Engine', color: 'from-cyan to-purple' },
   ];
 
   return (
@@ -108,15 +118,16 @@ export default function TechnologySection() {
               className="relative group"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-cyan/20 to-purple/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
-              <div className="relative glass-morphism rounded-xl p-6 flex flex-col items-center justify-center h-44 hover:neon-glow-cyan transition-all cursor-pointer">
-                <img
-                  src={tech.icon}
-                  alt={tech.name}
-                  className="w-16 h-16 mb-3 object-contain"
+
+              <div className="relative glass-morphism rounded-xl p-6 flex flex-col items-center justify-center h-40 hover:neon-glow-cyan transition-all cursor-pointer">
+                {/* Crisp PNG logo */}
+                <ImageLogo
+                  src={logoMeta[tech.name].src}
+                  alt={`${tech.name} logo`}
+                  height={84}
+                  aspect={logoMeta[tech.name].aspect}
                 />
-                <h3 className="text-lg font-orbitron font-bold text-white group-hover:text-cyan transition-colors">
-                  {tech.name}
+                <h3 className="text-lg font-orbitron font-bold text-white group-hover:text-cyan transition-colors mt-2">                  {tech.name}
                 </h3>
               </div>
             </motion.div>
@@ -135,7 +146,7 @@ export default function TechnologySection() {
               Continuous Innovation
             </h3>
             <p className="text-lg font-inter text-white/70 max-w-3xl mx-auto">
-              We stay at the cutting edge of CAD/PLM technology, continuously expanding our 
+              We stay at the cutting edge of CAD/PLM technology, continuously expanding our
               expertise with the latest tools and methodologies to deliver future-proof solutions.
             </p>
           </div>

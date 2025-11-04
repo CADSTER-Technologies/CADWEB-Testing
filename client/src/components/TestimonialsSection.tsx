@@ -56,23 +56,23 @@ function FloatingTestimonialSpheres() {
 export default function TestimonialsSection() {
   const testimonials = [
     {
-      name: 'Rajesh Kumar',
-      role: 'Engineering Director',
-      company: 'Tata Motors',
+      name: '',
+      role: '',
+      company: '',
       content: 'Cadster Technologies transformed our CAD workflow, reducing design iteration time by 60%. Their expertise in automation is unmatched.',
       rating: 5,
     },
     {
-      name: 'Priya Sharma',
-      role: 'Product Manager',
-      company: 'Mahindra & Mahindra',
+      name: '',
+      role: '',
+      company: '',
       content: 'The AR visualization solution they developed revolutionized our product demonstrations. Outstanding technical capability and support.',
       rating: 5,
     },
     {
-      name: 'Amit Patel',
-      role: 'CTO',
-      company: 'L&T Construction',
+      name: '',
+      role: '',
+      company: '',
       content: 'Professional, innovative, and reliable. The PLM integration was seamless and delivered ahead of schedule with zero downtime.',
       rating: 5,
     },

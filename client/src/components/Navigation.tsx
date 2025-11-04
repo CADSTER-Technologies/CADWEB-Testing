@@ -17,7 +17,7 @@ export default function Navigation() {
     { name: 'Home', href: '#home' },
     { name: 'About', href: '#about' },
     { name: 'Services', href: '#services' },
-    { name: 'Portfolio', href: '#portfolio' },
+    { name: 'Product', href: '#product' },
     { name: 'Technology', href: '#technology' },
     { name: 'Contact', href: '#contact' },
   ];
@@ -26,9 +26,8 @@ export default function Navigation() {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'glass-morphism shadow-lg' : 'bg-transparent'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass-morphism shadow-lg' : 'bg-transparent'
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
@@ -38,10 +37,9 @@ export default function Navigation() {
             className="flex items-center space-x-2"
           >
             <div className="w-10 h-10 bg-gradient-to-br from-cyan to-purple rounded-lg flex items-center justify-center">
-              <span className="text-white font-orbitron font-bold text-xl"><img src="/logo/cadster_logo.jpeg" alt="Cadster Logo" className="w-12 h-12 object-contain" /></span>
-            </div>
+              <span className="text-white font-orbitron font-bold text-xl"><img src="/logo/cadster_logo.png" alt="Cadster Logo" className="w-12 h-12 object-contain" /></span>            </div>
             <span className="text-white font-orbitron font-bold text-xl hidden sm:block">
-              Cadster <span className="text-cyan"></span>
+              CADSTER <span className="text-cyan"></span>
             </span>
           </motion.div>
 
