@@ -36,7 +36,7 @@ export default function Navigation() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center space-x-2"
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-cyan to-purple rounded-lg flex items-center justify-center">
+            <div>
               <span className="text-white font-orbitron font-bold text-xl"><img src="/logo/cadster_logo.png" alt="Cadster Logo" className="w-12 h-12 object-contain" /></span>            </div>
             <span className="text-white font-orbitron font-bold text-xl hidden sm:block">
               CADSTER <span className="text-cyan"></span>
