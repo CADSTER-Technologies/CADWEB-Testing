@@ -12,14 +12,14 @@ app.use(express.urlencoded({ extended: false }));
 
 // CORS - More permissive for preflight requests
 const corsOptions: cors.CorsOptions = {
-  origin: true, // Allow all origins (safe for your use case)
+  origin: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Handle preflight for all routes
+app.options('*', cors(corsOptions));
 
 console.log('🚀 Server starting...');
 console.log('✅ RESEND API Key:', Boolean(process.env.RESEND_API_KEY) ? 'Present' : '❌ MISSING');
@@ -54,13 +54,17 @@ app.use((req, res, next) => {
 
 (async () => {
   try {
+    // Register all routes FIRST
     const server = await registerRoutes(app);
 
+    // CRITICAL: Error handler MUST come after routes but BEFORE Vite/Static middleware
     app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
       const status = err.status || err.statusCode || 500;
       const message = err.message || "Internal Server Error";
 
-      console.error('❌ Error:', { status, message });
+      console.error('❌ Error:', { status, message, stack: err.stack });
+
+      // Always ensure JSON response
       res.status(status).json({
         success: false,
         message,
@@ -68,6 +72,7 @@ app.use((req, res, next) => {
       });
     });
 
+    // Vite or Static serving LAST
     if (app.get("env") === "development") {
       await setupVite(app, server);
     } else {
