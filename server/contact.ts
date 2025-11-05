@@ -4,6 +4,7 @@ import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY!);
 const OWNER_EMAIL = 'services@cadster.in';              // your inbox
 const SENDER = 'noreply@cadster.in'; // Must be verified in Resend dashboard
+
 export async function contactHandler(req: Request, res: Response) {
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, message: 'Method not allowed' });
@@ -16,19 +17,24 @@ export async function contactHandler(req: Request, res: Response) {
 
     // Honeypot: if 'website' has a value, silently accept (likely a bot)
     if (website) {
+      console.log('🤖 Honeypot triggered - bot detected');
       return res.json({ success: true, message: 'Thanks! We will contact you soon.' });
     }
 
     if (!name || !email || !message) {
       return res.status(400).json({ success: false, message: 'Name, email and message are required.' });
     }
+
     if (typeof name !== 'string' || typeof email !== 'string' || typeof message !== 'string') {
       return res.status(400).json({ success: false, message: 'Invalid payload.' });
     }
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ success: false, message: 'Invalid email format.' });
     }
+
+    console.log(`📨 Processing contact from: ${name} (${email})`);
 
     // 1) Auto‑reply to client
     try {
@@ -48,6 +54,7 @@ export async function contactHandler(req: Request, res: Response) {
           </div>
         `,
       });
+      console.log(`✅ Auto-reply sent to ${email}`);
     } catch (e: any) {
       console.error('Resend auto-reply failed:', e?.response?.data || e?.message || e);
       return res.status(502).json({ success: false, message: 'Email send failed (customer reply).' });
@@ -89,12 +96,19 @@ export async function contactHandler(req: Request, res: Response) {
           </div>
         `,
       });
+      console.log(`✅ Lead notification sent to ${OWNER_EMAIL}`);
     } catch (e: any) {
       console.error('Resend lead notification failed:', e?.response?.data || e?.message || e);
       return res.status(502).json({ success: false, message: 'Email send failed (lead notification).' });
     }
 
-    return res.status(200).json({ success: true, message: 'Thanks! We will contact you soon.' });
+    console.log(`✅ Contact form successfully processed for ${email}`);
+
+    // CRITICAL: Always return JSON response with return statement
+    return res.status(200).json({
+      success: true,
+      message: 'Thanks! We will contact you soon.'
+    });
   } catch (err: any) {
     console.error('Contact API error:', err?.message || err);
     return res.status(500).json({
