@@ -168,9 +168,8 @@ export default function ContactSection() {
               Get in Touch
             </h3>
 
-            {/* Updated form: autocomplete off + hidden honeypot */}
             <form onSubmit={handleSubmit} autoComplete="off" className="space-y-6">
-              {/* Honeypot field (bots often fill everything). Keep hidden. */}
+              {/* Honeypot field */}
               <input
                 type="text"
                 name="website"
@@ -180,6 +179,19 @@ export default function ContactSection() {
                 onChange={handleChange}
                 value={formData.website}
               />
+
+              {/* Name field - WAS MISSING! */}
+              <div>
+                <label className="block text-white/80 font-inter mb-2">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 glass-morphism rounded-lg text-white font-inter focus:neon-glow-cyan focus:outline-none transition-all"
+                  required
+                />
+              </div>
 
               <div>
                 <label className="block text-white/80 font-inter mb-2">Email</label>
@@ -217,7 +229,12 @@ export default function ContactSection() {
               </div>
 
               {submitStatus && (
-                <div className={`p-4 rounded-lg ${submitStatus.type === 'success' ? 'bg-cyan/20 border border-cyan' : 'bg-red-500/20 border border-red-500'}`}>
+                <div
+                  className={`p-4 rounded-lg ${submitStatus.type === 'success'
+                      ? 'bg-cyan/20 border border-cyan'
+                      : 'bg-red-500/20 border border-red-500'
+                    }`}
+                >
                   <p className="text-white font-inter text-sm">{submitStatus.message}</p>
                 </div>
               )}
