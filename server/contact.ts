@@ -2,12 +2,13 @@ import type { Request, Response } from 'express';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
-const OWNER_EMAIL = 'services@cadster.in';              // your inbox
-const SENDER = 'noreply@cadster.in'; // Must be verified in Resend dashboard
+const OWNER_EMAIL = 'services@cadster.in';
+const SENDER = 'noreply@cadster.in';
 
-export async function contactHandler(req: Request, res: Response) {
+export async function contactHandler(req: Request, res: Response): Promise<void> {
   if (req.method !== 'POST') {
-    return res.status(405).json({ success: false, message: 'Method not allowed' });
+    res.status(405).json({ success: false, message: 'Method not allowed' });
+    return;
   }
 
   try {
@@ -15,30 +16,36 @@ export async function contactHandler(req: Request, res: Response) {
       name?: string; email?: string; company?: string; message?: string; website?: string;
     };
 
-    // Honeypot: if 'website' has a value, silently accept (likely a bot)
+    console.log('📨 Received:', { name, email, company });
+
+    // Honeypot check
     if (website) {
-      console.log('🤖 Honeypot triggered - bot detected');
-      return res.json({ success: true, message: 'Thanks! We will contact you soon.' });
+      console.log('🤖 Honeypot triggered');
+      res.json({ success: true, message: 'Thanks! We will contact you soon.' });
+      return;
     }
 
+    // Validation
     if (!name || !email || !message) {
-      return res.status(400).json({ success: false, message: 'Name, email and message are required.' });
-    }
-
-    if (typeof name !== 'string' || typeof email !== 'string' || typeof message !== 'string') {
-      return res.status(400).json({ success: false, message: 'Invalid payload.' });
+      console.log('❌ Validation failed: missing fields');
+      res.status(400).json({ success: false, message: 'Name, email and message are required.' });
+      return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ success: false, message: 'Invalid email format.' });
+      console.log('❌ Invalid email:', email);
+      res.status(400).json({ success: false, message: 'Invalid email format.' });
+      return;
     }
 
     console.log(`📨 Processing contact from: ${name} (${email})`);
 
-    // 1) Auto‑reply to client
+    // Send auto-reply
+    let autoReplyResult;
     try {
-      await resend.emails.send({
+      console.log('📧 Sending auto-reply to:', email);
+      autoReplyResult = await resend.emails.send({
         from: SENDER,
         to: email,
         subject: 'Thanks for contacting Cadster Technologies',
@@ -54,15 +61,18 @@ export async function contactHandler(req: Request, res: Response) {
           </div>
         `,
       });
-      console.log(`✅ Auto-reply sent to ${email}`);
+      console.log('✅ Auto-reply sent:', autoReplyResult.id);
     } catch (e: any) {
-      console.error('Resend auto-reply failed:', e?.response?.data || e?.message || e);
-      return res.status(502).json({ success: false, message: 'Email send failed (customer reply).' });
+      console.error('❌ Auto-reply error:', e);
+      res.status(502).json({ success: false, message: `Auto-reply failed: ${e.message}` });
+      return;
     }
 
-    // 2) Lead notification to you
+    // Send lead notification
+    let leadResult;
     try {
-      await resend.emails.send({
+      console.log('📧 Sending lead to:', OWNER_EMAIL);
+      leadResult = await resend.emails.send({
         from: SENDER,
         to: OWNER_EMAIL,
         subject: `New lead — ${name} (${email})`,
@@ -96,24 +106,26 @@ export async function contactHandler(req: Request, res: Response) {
           </div>
         `,
       });
-      console.log(`✅ Lead notification sent to ${OWNER_EMAIL}`);
+      console.log('✅ Lead sent:', leadResult.id);
     } catch (e: any) {
-      console.error('Resend lead notification failed:', e?.response?.data || e?.message || e);
-      return res.status(502).json({ success: false, message: 'Email send failed (lead notification).' });
+      console.error('❌ Lead notification error:', e);
+      res.status(502).json({ success: false, message: `Lead notification failed: ${e.message}` });
+      return;
     }
 
-    console.log(`✅ Contact form successfully processed for ${email}`);
+    console.log(`✅ Both emails sent successfully`);
 
-    // CRITICAL: Always return JSON response with return statement
-    return res.status(200).json({
+    // ALWAYS return JSON with explicit status
+    res.status(200).json({
       success: true,
-      message: 'Thanks! We will contact you soon.'
+      message: 'Thanks! We will contact you soon.',
     });
   } catch (err: any) {
-    console.error('Contact API error:', err?.message || err);
-    return res.status(500).json({
+    console.error('❌ CRITICAL Contact API error:', err?.message || err);
+    // ALWAYS return valid JSON even on error
+    res.status(500).json({
       success: false,
-      message: 'Failed to process your request. Please try again later.',
+      message: `Server error: ${err?.message || 'Unknown error'}`,
     });
   }
 }
