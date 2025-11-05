@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+/*import { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { motion } from 'framer-motion';
 import { FiStar } from 'react-icons/fi';
@@ -141,4 +141,4 @@ export default function TestimonialsSection() {
       </div>
     </section>
   );
-}
+}*/

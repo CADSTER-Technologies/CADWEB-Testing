@@ -38,7 +38,7 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-orbitron font-bold mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              {['About Us', 'Services', 'Portfolio', 'Technology', 'Contact'].map((item) => (
+              {['About', 'Services', 'Product', 'Technology', 'Contact'].map((item) => (
                 <li key={item}>
                   <a href={`#${item.toLowerCase().replace(' ', '-')}`} className="text-white/70 hover:text-cyan font-inter transition-colors">
                     {item}
@@ -70,7 +70,7 @@ export default function Footer() {
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
 
           <p className="text-white/50 font-inter text-sm text-center md:text-left">
-            © 2023-2025 Cadster Technologies. All rights reserved. | Innovating Design Automation
+            © 2025 Cadster Technologies. All rights reserved. | Innovating Design Automation
           </p>
 
           <div className="flex gap-6 text-sm font-inter">

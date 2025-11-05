@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./components/ThemeProvider";
 import Navigation from "./components/Navigation";
 import HeroSection from "./components/HeroSection";
@@ -8,20 +9,24 @@ import PortfolioSection from "./components/PortfolioSection";
 import TechnologySection from "./components/TechnologySection";
 import DataFlowSection from "./components/DataFlowSection";
 import ModelViewer from "./components/ModelViewer";
-import TestimonialsSection from "./components/TestimonialsSection";
+//import TestimonialsSection from "./components/TestimonialsSection";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
 
-function AppContent() {
+// New pages
+import LicensePage from "./pages/License";
+import TermsPage from "./pages/Terms";
+import PrivacyPage from "./pages/Privacy";
+
+function HomePage() {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setCursorPosition({ x: e.clientX, y: e.clientY });
     };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   return (
@@ -40,21 +45,25 @@ function AppContent() {
       <PortfolioSection />
       <TechnologySection />
       <DataFlowSection />
-      <ModelViewer 
+      <ModelViewer
         title="3D CAD Visualization"
         description="Experience next-generation CAD model visualization with WebGL-powered rendering"
       />
-      <TestimonialsSection />
       <ContactSection />
       <Footer />
     </div>
   );
 }
-
+//if needed should add the testimonials section <TestimonialsSection />
 function App() {
   return (
     <ThemeProvider>
-      <AppContent />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/license" element={<LicensePage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+      </Routes>
     </ThemeProvider>
   );
 }
