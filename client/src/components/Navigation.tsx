@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ThemeToggle } from './ThemeToggle';
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
@@ -56,7 +55,6 @@ export default function Navigation() {
                 {item.name}
               </motion.a>
             ))}
-            <ThemeToggle />
             <motion.button
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
