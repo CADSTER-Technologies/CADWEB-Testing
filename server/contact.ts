@@ -42,10 +42,9 @@ export async function contactHandler(req: Request, res: Response): Promise<void>
     console.log(`📨 Processing contact from: ${name} (${email})`);
 
     // Send auto-reply
-    let autoReplyResult;
     try {
       console.log('📧 Sending auto-reply to:', email);
-      autoReplyResult = await resend.emails.send({
+      await resend.emails.send({
         from: SENDER,
         to: email,
         subject: 'Thanks for contacting Cadster Technologies',
@@ -61,18 +60,17 @@ export async function contactHandler(req: Request, res: Response): Promise<void>
           </div>
         `,
       });
-      console.log('✅ Auto-reply sent:', autoReplyResult.id);
+      console.log('✅ Auto-reply sent to:', email);
     } catch (e: any) {
-      console.error('❌ Auto-reply error:', e);
-      res.status(502).json({ success: false, message: `Auto-reply failed: ${e.message}` });
+      console.error('❌ Auto-reply error:', e?.message || e);
+      res.status(502).json({ success: false, message: `Auto-reply failed: ${e?.message}` });
       return;
     }
 
     // Send lead notification
-    let leadResult;
     try {
       console.log('📧 Sending lead to:', OWNER_EMAIL);
-      leadResult = await resend.emails.send({
+      await resend.emails.send({
         from: SENDER,
         to: OWNER_EMAIL,
         subject: `New lead — ${name} (${email})`,
@@ -106,10 +104,10 @@ export async function contactHandler(req: Request, res: Response): Promise<void>
           </div>
         `,
       });
-      console.log('✅ Lead sent:', leadResult.id);
+      console.log('✅ Lead sent to:', OWNER_EMAIL);
     } catch (e: any) {
-      console.error('❌ Lead notification error:', e);
-      res.status(502).json({ success: false, message: `Lead notification failed: ${e.message}` });
+      console.error('❌ Lead notification error:', e?.message || e);
+      res.status(502).json({ success: false, message: `Lead notification failed: ${e?.message}` });
       return;
     }
 
@@ -122,7 +120,6 @@ export async function contactHandler(req: Request, res: Response): Promise<void>
     });
   } catch (err: any) {
     console.error('❌ CRITICAL Contact API error:', err?.message || err);
-    // ALWAYS return valid JSON even on error
     res.status(500).json({
       success: false,
       message: `Server error: ${err?.message || 'Unknown error'}`,
