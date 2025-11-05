@@ -6,24 +6,15 @@ import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-// CORS - More permissive for preflight requests
-const corsOptions: cors.CorsOptions = {
-  origin: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+// Middleware - CORS and JSON parsing
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: false, limit: '10mb' }));
+app.use(cors({ origin: true, credentials: true }));
 
 console.log('🚀 Server starting...');
 console.log('✅ RESEND API Key:', Boolean(process.env.RESEND_API_KEY) ? 'Present' : '❌ MISSING');
 
+// Request logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -57,14 +48,13 @@ app.use((req, res, next) => {
     // Register all routes FIRST
     const server = await registerRoutes(app);
 
-    // CRITICAL: Error handler MUST come after routes but BEFORE Vite/Static middleware
+    // Error handler - MUST be after routes but BEFORE Vite/Static
     app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
       const status = err.status || err.statusCode || 500;
       const message = err.message || "Internal Server Error";
 
-      console.error('❌ Error:', { status, message, stack: err.stack });
+      console.error('❌ Error:', { status, message });
 
-      // Always ensure JSON response
       res.status(status).json({
         success: false,
         message,
