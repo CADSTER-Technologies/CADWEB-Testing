@@ -17,6 +17,7 @@ import Footer from "./components/Footer";
 import LicensePage from "./pages/License";
 import TermsPage from "./pages/Terms";
 import PrivacyPage from "./pages/Privacy";
+import ProductsPage from "./pages/Products";
 
 function HomePage() {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
@@ -60,6 +61,7 @@ function App() {
     <ThemeProvider>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/products" element={<ProductsPage />} />
         <Route path="/license" element={<LicensePage />} />
         <Route path="/terms" element={<TermsPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />

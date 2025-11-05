@@ -5,7 +5,7 @@ import * as THREE from 'three';
 
 function ParticleWave() {
   const pointsRef = useRef<THREE.Points>(null);
-  
+
   const particleCount = 5000;
   const particles = new THREE.BufferGeometry();
   const positions = new Float32Array(particleCount * 3);
@@ -21,16 +21,16 @@ function ParticleWave() {
   useFrame((state) => {
     if (pointsRef.current) {
       const positions = pointsRef.current.geometry.attributes.position.array as Float32Array;
-      
+
       for (let i = 0; i < particleCount; i++) {
         const i3 = i * 3;
         const x = positions[i3];
         const z = positions[i3 + 2];
-        
-        positions[i3 + 1] = Math.sin(x * 0.3 + state.clock.elapsedTime) * 
-                           Math.cos(z * 0.3 + state.clock.elapsedTime) * 2;
+
+        positions[i3 + 1] = Math.sin(x * 0.3 + state.clock.elapsedTime) *
+          Math.cos(z * 0.3 + state.clock.elapsedTime) * 2;
       }
-      
+
       pointsRef.current.geometry.attributes.position.needsUpdate = true;
       pointsRef.current.rotation.y += 0.001;
     }
@@ -55,6 +55,7 @@ export default function ContactSection() {
     email: '',
     company: '',
     message: '',
+    website: ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,8 +66,13 @@ export default function ContactSection() {
     setIsSubmitting(true);
     setSubmitStatus(null);
 
+    // Simple approach: use Render URL directly
+    // (Switch to localhost for local testing)
+    const apiUrl = 'https://cadweb-testing.onrender.com/api/contact';
+    // For local testing, change to: 'http://localhost:5000/api/contact'
+
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -74,18 +80,36 @@ export default function ContactSection() {
         body: JSON.stringify(formData),
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
       const data = await response.json();
 
       if (data.success) {
-        setSubmitStatus({ type: 'success', message: data.message });
-        setFormData({ name: '', email: '', company: '', message: '' });
+        setSubmitStatus({
+          type: 'success',
+          message: data.message || 'Thanks! We will contact you soon.',
+        });
+        setFormData({
+          name: '',
+          email: '',
+          company: '',
+          message: '',
+          website: '',
+        });
+        setTimeout(() => setSubmitStatus(null), 5000);
       } else {
-        setSubmitStatus({ type: 'error', message: data.message });
+        setSubmitStatus({
+          type: 'error',
+          message: data.message || 'Submission failed. Please try again.',
+        });
       }
-    } catch (error) {
-      setSubmitStatus({ 
-        type: 'error', 
-        message: 'Network error. Please try again later.' 
+    } catch (err: any) {
+      console.error('Contact form error:', err);
+      setSubmitStatus({
+        type: 'error',
+        message: 'Network error. Please try again later.',
       });
     } finally {
       setIsSubmitting(false);
@@ -93,15 +117,14 @@ export default function ContactSection() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   return (
-    <section id="contact" className="relative py-20 md:py-32 bg-gradient-to-b from-navy via-graphite to-navy overflow-hidden">
-      <div className="absolute inset-0">
+    <section
+      id="contact"
+      className="relative py-20 md:py-32 bg-gradient-to-b from-navy via-graphite to-navy overflow-hidden"
+    >      <div className="absolute inset-0">
         <Canvas camera={{ position: [0, 0, 10], fov: 75 }}>
           <ParticleWave />
         </Canvas>
@@ -137,18 +160,18 @@ export default function ContactSection() {
               Get in Touch
             </h3>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-white/80 font-inter mb-2">Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 glass-morphism rounded-lg text-white font-inter focus:neon-glow-cyan focus:outline-none transition-all"
-                  required
-                />
-              </div>
+            {/* Updated form: autocomplete off + hidden honeypot */}
+            <form onSubmit={handleSubmit} autoComplete="off" className="space-y-6">
+              {/* Honeypot field (bots often fill everything). Keep hidden. */}
+              <input
+                type="text"
+                name="website"
+                className="hidden"
+                tabIndex={-1}
+                autoComplete="off"
+                onChange={handleChange}
+                value={formData.website}
+              />
 
               <div>
                 <label className="block text-white/80 font-inter mb-2">Email</label>

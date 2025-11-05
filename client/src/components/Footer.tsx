@@ -9,11 +9,17 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
-              <div className= "w-10 h-10 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center">
                 <span className="text-white font-orbitron font-bold text-xl"><img src="logo/cadster_logo.png" alt="Cadster logo" /></span>
               </div>
-              <span className="text-white font-orbitron font-bold text-xl">
-                CADSTER <span className="text-cyan">TECHNOLOGIES</span>
+              <span
+                className="text-transparent bg-clip-text
+                   bg-[linear-gradient(90deg,#e53935_0%,#43a047_40%,#1e88e5_80%,#43a047_100%)]
+                   drop-shadow-[0_0_8px_rgba(30,136,229,0.35)]
+                   font-orbitron font-bold text-2xl tracking-wide
+                   animate-[hueShift_6s_ease-in-out_infinite_alternate]"
+              >
+                CADSTER <span className="whitespace-pre">TECHNOLOGIES</span>
               </span>
             </div>
             <p className="text-white/70 font-inter mb-4 max-w-md">
@@ -38,13 +44,46 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-orbitron font-bold mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              {['About', 'Services', 'Product', 'Technology', 'Contact'].map((item) => (
-                <li key={item}>
-                  <a href={`#${item.toLowerCase().replace(' ', '-')}`} className="text-white/70 hover:text-cyan font-inter transition-colors">
-                    {item}
-                  </a>
-                </li>
-              ))}
+              <li>
+                <a
+                  href="/products"
+                  className="text-white/70 hover:text-cyan font-inter transition-colors"
+                >
+                  Products
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#about"
+                  className="text-white/70 hover:text-cyan font-inter transition-colors"
+                >
+                  About
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#services"
+                  className="text-white/70 hover:text-cyan font-inter transition-colors"
+                >
+                  Services
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#technology"
+                  className="text-white/70 hover:text-cyan font-inter transition-colors"
+                >
+                  Technology
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#contact"
+                  className="text-white/70 hover:text-cyan font-inter transition-colors"
+                >
+                  Contact
+                </a>
+              </li>
             </ul>
           </div>
 

@@ -1,10 +1,29 @@
+import 'dotenv/config';
 import express, { type Request, Response, NextFunction } from "express";
+import cors from 'cors';
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
+
+// Middleware - Order matters!
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// CORS configuration (allow frontend to call API)
+app.use(cors({
+  origin: [
+    'http://localhost:5173',           // Vite dev server
+    'http://localhost:3000',           // Alternative local port
+    'https://cadweb-testing.onrender.com',  // Production
+    'https://cadster.in',               // Your domain (when configured)
+  ],
+  credentials: true,
+}));
+
+// Log API requests
+console.log('🚀 Server starting...');
+console.log('✅ RESEND API Key:', Boolean(process.env.RESEND_API_KEY) ? 'Present' : '❌ MISSING');
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -17,7 +36,7 @@ app.use((req, res, next) => {
     return originalResJson.apply(res, [bodyJson, ...args]);
   };
 
-  res.on("finish", () => {
+  res.on('finish', () => {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
       let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
@@ -36,34 +55,43 @@ app.use((req, res, next) => {
   next();
 });
 
+// Initialize server
 (async () => {
-  const server = await registerRoutes(app);
+  try {
+    const server = await registerRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+    // Error handler middleware
+    app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+      const status = err.status || err.statusCode || 500;
+      const message = err.message || "Internal Server Error";
 
-    res.status(status).json({ message });
-    throw err;
-  });
+      console.error('❌ Error:', { status, message, error: err });
+      res.status(status).json({ 
+        success: false,
+        message,
+        ...(process.env.NODE_ENV === 'development' && { error: err.stack })
+      });
+    });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
+    // Setup Vite or serve static files
+    if (app.get("env") === "development") {
+      await setupVite(app, server);
+    } else {
+      serveStatic(app);
+    }
+
+    // Start server
+    const port = Number(process.env.PORT) || 5000;
+    server.listen(
+      { port, host: '0.0.0.0' },
+      () => {
+        log(`✅ Server running on http://0.0.0.0:${port}`);
+        log(`📧 Contact API: POST /api/contact`);
+        log(`🌍 CORS enabled for: localhost:5173, cadweb-testing.onrender.com`);
+      }
+    );
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    process.exit(1);
   }
-
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client
-  const port = 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
-  });
 })();
