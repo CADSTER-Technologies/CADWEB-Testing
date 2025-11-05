@@ -69,8 +69,7 @@ export default function ContactSection() {
     const apiUrl = 'https://cadster.in/api/contact';
 
     try {
-      console.log('📤 Sending to:', apiUrl);
-
+      console.log('📤 Sending form data...');
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -79,45 +78,48 @@ export default function ContactSection() {
         body: JSON.stringify(formData),
       });
 
-      console.log('📥 Response status:', response.status);
+      console.log('Response status:', response.status);
 
-      // DON'T use response.text() - it consumes the body!
-      // Go straight to response.json()
-      const data = await response.json();
-
+      // Handle non-200 status
       if (!response.ok) {
-        throw new Error(data.message || `HTTP ${response.status}`);
+        throw new Error(`HTTP ${response.status}`);
       }
 
-      if (data.success) {
+      // Safely parse JSON
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonErr) {
+        console.error('Failed to parse JSON:', jsonErr);
+        throw new Error('Invalid server response');
+      }
+
+      console.log('✅ Response data:', data);
+
+      if (data?.success) {
         setSubmitStatus({
           type: 'success',
           message: data.message || 'Thanks! We will contact you soon.',
         });
-        setFormData({
-          name: '',
-          email: '',
-          company: '',
-          message: '',
-          website: '',
-        });
+        setFormData({ name: '', email: '', company: '', message: '', website: '' });
         setTimeout(() => setSubmitStatus(null), 5000);
       } else {
         setSubmitStatus({
           type: 'error',
-          message: data.message || 'Submission failed.',
+          message: data?.message || 'Failed to submit form',
         });
       }
     } catch (err: any) {
-      console.error('❌ Contact form error:', err);
+      console.error('❌ Form submission error:', err?.message || err);
       setSubmitStatus({
         type: 'error',
-        message: err.message || 'Network error. Please try again later.',
+        message: err?.message || 'Network error. Please try again.',
       });
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

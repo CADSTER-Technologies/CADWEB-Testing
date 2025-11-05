@@ -3,135 +3,109 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 const OWNER_EMAIL = 'services@cadster.in';
-const SENDER = 'noreply@cadster.in';
+const SENDER_EMAIL = process.env.SENDER_EMAIL || 'noreply@cadster.in';
 
 export async function contactHandler(req: Request, res: Response): Promise<void> {
+  console.log('📨 [CONTACT] Request received:', {
+    method: req.method,
+    path: req.path,
+    bodySize: JSON.stringify(req.body).length,
+  });
+
   if (req.method !== 'POST') {
+    console.log('❌ [CONTACT] Invalid method:', req.method);
     res.status(405).json({ success: false, message: 'Method not allowed' });
     return;
   }
 
   try {
-    const { name, email, company, message, website } = (req.body || {}) as {
-      name?: string; email?: string; company?: string; message?: string; website?: string;
-    };
+    const { name, email, company, message, website } = req.body;
 
-    console.log('📨 Received:', { name, email, company });
+    console.log('📋 [CONTACT] Form data received:', { name, email, company, website });
 
-    // Honeypot check
     if (website) {
-      console.log('🤖 Honeypot triggered');
-      res.json({ success: true, message: 'Thanks! We will contact you soon.' });
+      console.log('🤖 [CONTACT] Honeypot triggered');
+      res.status(200).json({ success: true, message: 'Thanks! We will contact you soon.' });
       return;
     }
 
-    // Validation
-    if (!name || !email || !message) {
-      console.log('❌ Validation failed: missing fields');
-      res.status(400).json({ success: false, message: 'Name, email and message are required.' });
+    if (!name?.trim() || !email?.trim() || !message?.trim()) {
+      console.log('❌ [CONTACT] Missing required fields');
+      res.status(400).json({ success: false, message: 'All fields are required.' });
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      console.log('❌ Invalid email:', email);
+      console.log('❌ [CONTACT] Invalid email:', email);
       res.status(400).json({ success: false, message: 'Invalid email format.' });
       return;
     }
 
-    console.log(`📨 Processing contact from: ${name} (${email})`);
+    console.log(`📧 [CONTACT] Starting email send: from="${SENDER_EMAIL}" to_customer="${email}" to_owner="${OWNER_EMAIL}"`);
 
-    // Send auto-reply
+    // Auto-reply
     try {
-      console.log('📧 Sending auto-reply to:', email);
+      console.log(`📤 [CONTACT] Sending auto-reply...`);
       await resend.emails.send({
-        from: SENDER,
+        from: SENDER_EMAIL,
         to: email,
-        subject: 'Thanks for contacting Cadster Technologies',
-        html: `
-          <div style="font-family: Arial, sans-serif; color: #333;">
-            <h2>Hello ${escapeHtml(name)},</h2>
-            <p>Thank you for reaching out to Cadster Technologies. We've received your inquiry and will get back to you shortly.</p>
-            ${company ? `<p><strong>Company:</strong> ${escapeHtml(company)}</p>` : ''}
-            <p style="margin-top: 30px; color: #666; font-size: 14px;">
-              Best regards,<br/>
-              <strong>Cadster Technologies Team</strong>
-            </p>
-          </div>
-        `,
+        subject: 'We Received Your Message - Cadster Technologies',
+        html: `<div style="font-family: Arial, sans-serif;">
+          <h2>Hi ${name},</h2>
+          <p>Thanks for reaching out to Cadster! We'll get back to you soon.</p>
+          <p style="color: #666; font-size: 12px;">Best regards,<br/>Cadster Team</p>
+        </div>`,
       });
-      console.log('✅ Auto-reply sent to:', email);
-    } catch (e: any) {
-      console.error('❌ Auto-reply error:', e?.message || e);
-      res.status(502).json({ success: false, message: `Auto-reply failed: ${e?.message}` });
-      return;
+      console.log(`✅ [CONTACT] Auto-reply sent successfully`);
+    } catch (emailErr: any) {
+      console.error(`❌ [CONTACT] Auto-reply failed:`, {
+        error: emailErr?.message,
+        statusCode: emailErr?.statusCode,
+      });
     }
 
-    // Send lead notification
+    // Owner notification
     try {
-      console.log('📧 Sending lead to:', OWNER_EMAIL);
+      console.log(`📤 [CONTACT] Sending lead notification...`);
       await resend.emails.send({
-        from: SENDER,
+        from: SENDER_EMAIL,
         to: OWNER_EMAIL,
-        subject: `New lead — ${name} (${email})`,
-        html: `
-          <div style="font-family: Arial, sans-serif; color: #333;">
-            <h2>🎯 New Contact Submission</h2>
-            <table style="width: 100%; border-collapse: collapse;">
-              <tr style="background-color: #f5f5f5;">
-                <td style="padding: 10px; font-weight: bold; width: 30%;">Name:</td>
-                <td style="padding: 10px;">${escapeHtml(name)}</td>
-              </tr>
-              <tr>
-                <td style="padding: 10px; font-weight: bold;">Email:</td>
-                <td style="padding: 10px;"><a href="mailto:${email}">${email}</a></td>
-              </tr>
-              ${company ? `
-              <tr style="background-color: #f5f5f5;">
-                <td style="padding: 10px; font-weight: bold;">Company:</td>
-                <td style="padding: 10px;">${escapeHtml(company)}</td>
-              </tr>
-              ` : ''}
-              <tr>
-                <td style="padding: 10px; font-weight: bold;">Time:</td>
-                <td style="padding: 10px;">${new Date().toISOString()}</td>
-              </tr>
-            </table>
-            <h3 style="margin-top: 20px;">Message:</h3>
-            <p style="padding: 15px; background-color: #f9f9f9; border-left: 4px solid #00E1FF;">
-              ${escapeHtml(message).replace(/\n/g, '<br/>')}
-            </p>
-          </div>
-        `,
+        subject: `New Lead: ${name} (${email})`,
+        html: `<div style="font-family: Arial, sans-serif;">
+          <h3>New Contact Submission</h3>
+          <p><b>Name:</b> ${name}</p>
+          <p><b>Email:</b> ${email}</p>
+          <p><b>Company:</b> ${company || 'N/A'}</p>
+          <p><b>Time:</b> ${new Date().toISOString()}</p>
+          <h4>Message:</h4>
+          <p>${message.replace(/\n/g, '<br>')}</p>
+        </div>`,
       });
-      console.log('✅ Lead sent to:', OWNER_EMAIL);
-    } catch (e: any) {
-      console.error('❌ Lead notification error:', e?.message || e);
-      res.status(502).json({ success: false, message: `Lead notification failed: ${e?.message}` });
-      return;
+      console.log(`✅ [CONTACT] Lead email sent successfully`);
+    } catch (emailErr: any) {
+      console.error(`❌ [CONTACT] Lead email failed:`, {
+        error: emailErr?.message,
+        statusCode: emailErr?.statusCode,
+      });
     }
 
-    console.log(`✅ Both emails sent successfully`);
-
-    // ALWAYS return JSON with explicit status
+    console.log(`✅ [CONTACT] Completed successfully`);
     res.status(200).json({
       success: true,
-      message: 'Thanks! We will contact you soon.',
+      message: 'Thanks for reaching out! We\'ll be in touch soon.',
     });
+    return;
   } catch (err: any) {
-    console.error('❌ CRITICAL Contact API error:', err?.message || err);
+    console.error(`❌ [CONTACT] Unhandled error:`, {
+      message: err?.message,
+      stack: err?.stack,
+      type: err?.constructor?.name,
+    });
     res.status(500).json({
       success: false,
-      message: `Server error: ${err?.message || 'Unknown error'}`,
+      message: 'An error occurred. Please try again later.',
     });
+    return;
   }
-}
-
-function escapeHtml(s: string): string {
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
 }
