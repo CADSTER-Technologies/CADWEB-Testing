@@ -66,7 +66,7 @@ export default function ContactSection() {
     setIsSubmitting(true);
     setSubmitStatus(null);
 
-    const apiUrl = 'https://cadster.in/api/contact';
+    const apiUrl = '/api/contact';
 
     try {
       console.log('📤 Sending form data...');
