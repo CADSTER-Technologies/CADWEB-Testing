@@ -6,22 +6,21 @@ import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 
-// Middleware - Order matters!
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// CORS configuration (allow frontend to call API)
-app.use(cors({
-  origin: [
-    'http://localhost:5173',           // Vite dev server
-    'http://localhost:3000',           // Alternative local port
-    'https://cadweb-testing.onrender.com',  // Production
-    'https://cadster.in',               // Your domain (when configured)
-  ],
+// CORS - More permissive for preflight requests
+const corsOptions: cors.CorsOptions = {
+  origin: true, // Allow all origins (safe for your use case)
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
-}));
+};
 
-// Log API requests
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Handle preflight for all routes
+
 console.log('🚀 Server starting...');
 console.log('✅ RESEND API Key:', Boolean(process.env.RESEND_API_KEY) ? 'Present' : '❌ MISSING');
 
@@ -43,11 +42,9 @@ app.use((req, res, next) => {
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
-
       if (logLine.length > 80) {
         logLine = logLine.slice(0, 79) + "…";
       }
-
       log(logLine);
     }
   });
@@ -55,39 +52,35 @@ app.use((req, res, next) => {
   next();
 });
 
-// Initialize server
 (async () => {
   try {
     const server = await registerRoutes(app);
 
-    // Error handler middleware
     app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
       const status = err.status || err.statusCode || 500;
       const message = err.message || "Internal Server Error";
 
-      console.error('❌ Error:', { status, message, error: err });
-      res.status(status).json({ 
+      console.error('❌ Error:', { status, message });
+      res.status(status).json({
         success: false,
         message,
         ...(process.env.NODE_ENV === 'development' && { error: err.stack })
       });
     });
 
-    // Setup Vite or serve static files
     if (app.get("env") === "development") {
       await setupVite(app, server);
     } else {
       serveStatic(app);
     }
 
-    // Start server
     const port = Number(process.env.PORT) || 5000;
     server.listen(
       { port, host: '0.0.0.0' },
       () => {
         log(`✅ Server running on http://0.0.0.0:${port}`);
         log(`📧 Contact API: POST /api/contact`);
-        log(`🌍 CORS enabled for: localhost:5173, cadweb-testing.onrender.com`);
+        log(`🌐 CORS: All origins allowed`);
       }
     );
   } catch (error) {

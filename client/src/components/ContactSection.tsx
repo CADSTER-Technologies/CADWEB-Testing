@@ -66,12 +66,11 @@ export default function ContactSection() {
     setIsSubmitting(true);
     setSubmitStatus(null);
 
-    // Simple approach: use Render URL directly
-    // (Switch to localhost for local testing)
-    const apiUrl = 'https://cadweb-testing.onrender.com/api/contact';
-    // For local testing, change to: 'http://localhost:5000/api/contact'
+    const apiUrl = 'https://cadster.in/api/contact'; // Use your domain instead of Render
 
     try {
+      console.log('📤 Sending to:', apiUrl);
+
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -80,11 +79,19 @@ export default function ContactSection() {
         body: JSON.stringify(formData),
       });
 
+      console.log('📥 Response status:', response.status);
+
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      const data = await response.json();
+      // Check if response has content
+      const text = await response.text();
+      if (!text) {
+        throw new Error('Empty response from server');
+      }
+
+      const data = JSON.parse(text);
 
       if (data.success) {
         setSubmitStatus({
@@ -102,19 +109,20 @@ export default function ContactSection() {
       } else {
         setSubmitStatus({
           type: 'error',
-          message: data.message || 'Submission failed. Please try again.',
+          message: data.message || 'Submission failed.',
         });
       }
     } catch (err: any) {
-      console.error('Contact form error:', err);
+      console.error('❌ Contact form error:', err);
       setSubmitStatus({
         type: 'error',
-        message: 'Network error. Please try again later.',
+        message: err.message || 'Network error. Please try again later.',
       });
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
