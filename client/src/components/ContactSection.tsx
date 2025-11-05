@@ -66,7 +66,7 @@ export default function ContactSection() {
     setIsSubmitting(true);
     setSubmitStatus(null);
 
-    const apiUrl = 'https://cadster.in/api/contact'; // Use your domain instead of Render
+    const apiUrl = 'https://cadster.in/api/contact';
 
     try {
       console.log('📤 Sending to:', apiUrl);
@@ -81,17 +81,13 @@ export default function ContactSection() {
 
       console.log('📥 Response status:', response.status);
 
+      // DON'T use response.text() - it consumes the body!
+      // Go straight to response.json()
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        throw new Error(data.message || `HTTP ${response.status}`);
       }
-
-      // Check if response has content
-      const text = await response.text();
-      if (!text) {
-        throw new Error('Empty response from server');
-      }
-
-      const data = JSON.parse(text);
 
       if (data.success) {
         setSubmitStatus({
@@ -231,8 +227,8 @@ export default function ContactSection() {
               {submitStatus && (
                 <div
                   className={`p-4 rounded-lg ${submitStatus.type === 'success'
-                      ? 'bg-cyan/20 border border-cyan'
-                      : 'bg-red-500/20 border border-red-500'
+                    ? 'bg-cyan/20 border border-cyan'
+                    : 'bg-red-500/20 border border-red-500'
                     }`}
                 >
                   <p className="text-white font-inter text-sm">{submitStatus.message}</p>
