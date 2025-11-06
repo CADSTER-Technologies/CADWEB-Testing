@@ -1,35 +1,28 @@
-import type { Express } from "express";
-import type { Server } from "http";
-import path from "path";
-import express from "express";
-import fs from "fs";
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+import glsl from "vite-plugin-glsl";
 
-export async function setupVite(app: Express, server: Server) {
-  // Dev only - not used in production
-}
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-export function serveStatic(app: Express) {
-  const distPath = path.join(process.cwd(), 'dist', 'public');
-
-  // Serve static files FIRST
-  app.use(express.static(distPath, {
-    maxAge: '1h',
-    etag: false
-  }));
-
-  // API routes already registered in routes.ts before this is called!
-
-  // SPA fallback - ONLY for non-API routes
-  app.get('*', (req, res) => {
-    // Don't fallback for /api routes
-    if (req.path.startsWith('/api')) {
-      return res.status(404).json({ error: 'Not found' });
-    }
-    // Serve index.html for all other routes (React SPA)
-    res.sendFile(path.join(distPath, 'index.html'));
-  });
-}
-
-export function log(message: string) {
-  console.log(`[${new Date().toISOString()}] ${message}`);
-}
+export default defineConfig({
+  plugins: [
+    react(),
+    glsl(), // GLSL shader support
+  ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./client/src"),
+      "@shared": path.resolve(__dirname, "./shared"),
+    },
+  },
+  root: path.resolve(__dirname, "./client"),
+  build: {
+    outDir: path.resolve(__dirname, "./dist/public"),
+    emptyOutDir: true,
+  },
+  // Add support for large models and audio files
+  assetsInclude: ["**/*.gltf", "**/*.glb", "**/*.mp3", "**/*.ogg", "**/*.wav"],
+});
