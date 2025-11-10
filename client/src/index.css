@@ -1,9 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Orbitron:wght@400;700&display=swap');
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Orbitron:wght@400;700&display=swap');
+
 
 @layer base {
   :root {
@@ -72,7 +74,12 @@
     overflow-y: auto;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
   }
 
@@ -120,5 +127,15 @@
     text-shadow:
       0 0 8px rgba(122, 0, 255, 0.8),
       0 0 16px rgba(122, 0, 255, 0.5);
+  }
+}
+
+@keyframes gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 100% 50%;
   }
 }

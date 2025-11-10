@@ -27,7 +27,7 @@ function LoadingSpinner() {
 }
 
 //
-// 🔹 3D Metallic "CADSTER" Text
+// 🔹 3D Metallic “CADSTER” Text
 //
 function CadsterText3D() {
   const groupRef = useRef<THREE.Group>(null);
@@ -103,32 +103,32 @@ function CadsterText3D() {
           <primitive object={materials.red} attach="material" />
         </Text3D>
 
-        <Text3D position={[1.0, 0, 0]} font="/fonts/helvetiker_regular.typeface.json" size={1} height={0.35} bevelEnabled bevelThickness={0.03} bevelSize={0.03}>
+        <Text3D position={[0.9, 0, 0]} font="/fonts/helvetiker_regular.typeface.json" size={1} height={0.35} bevelEnabled bevelThickness={0.03} bevelSize={0.03}>
           A
           <primitive object={materials.red} attach="material" />
         </Text3D>
 
-        <Text3D position={[2.08, 0, 0]} font="/fonts/helvetiker_regular.typeface.json" size={1} height={0.35} bevelEnabled bevelThickness={0.03} bevelSize={0.03}>
+        <Text3D position={[1.8, 0, 0]} font="/fonts/helvetiker_regular.typeface.json" size={1} height={0.35} bevelEnabled bevelThickness={0.03} bevelSize={0.03}>
           D
           <primitive object={materials.dShader} attach="material" />
         </Text3D>
 
-        <Text3D position={[3.1, 0, 0]} font="/fonts/helvetiker_regular.typeface.json" size={1} height={0.35} bevelEnabled bevelThickness={0.03} bevelSize={0.03}>
+        <Text3D position={[2.7, 0, 0]} font="/fonts/helvetiker_regular.typeface.json" size={1} height={0.35} bevelEnabled bevelThickness={0.03} bevelSize={0.03}>
           S
           <primitive object={materials.green} attach="material" />
         </Text3D>
 
-        <Text3D position={[4.0, 0, 0]} font="/fonts/helvetiker_regular.typeface.json" size={1} height={0.35} bevelEnabled bevelThickness={0.03} bevelSize={0.03}>
+        <Text3D position={[3.6, 0, 0]} font="/fonts/helvetiker_regular.typeface.json" size={1} height={0.35} bevelEnabled bevelThickness={0.03} bevelSize={0.03}>
           T
           <primitive object={materials.tShader} attach="material" />
         </Text3D>
 
-        <Text3D position={[5.0, 0, 0]} font="/fonts/helvetiker_regular.typeface.json" size={1} height={0.35} bevelEnabled bevelThickness={0.03} bevelSize={0.03}>
+        <Text3D position={[4.5, 0, 0]} font="/fonts/helvetiker_regular.typeface.json" size={1} height={0.35} bevelEnabled bevelThickness={0.03} bevelSize={0.03}>
           E
           <primitive object={materials.blue} attach="material" />
         </Text3D>
 
-        <Text3D position={[6.0, 0, 0]} font="/fonts/helvetiker_regular.typeface.json" size={1} height={0.35} bevelEnabled bevelThickness={0.03} bevelSize={0.03}>
+        <Text3D position={[5.4, 0, 0]} font="/fonts/helvetiker_regular.typeface.json" size={1} height={0.35} bevelEnabled bevelThickness={0.03} bevelSize={0.03}>
           R
           <primitive object={materials.blue} attach="material" />
         </Text3D>
@@ -244,8 +244,8 @@ export function ARVRModal({ isOpen, onClose, title }: ARVRModalProps) {
                         key={mode}
                         onClick={() => setViewMode(mode)}
                         className={`px-4 py-2 rounded font-inter text-sm uppercase transition-all ${viewMode === mode
-                          ? 'bg-gradient-to-r from-cyan to-purple text-white'
-                          : 'text-white/70 hover:text-white'
+                            ? 'bg-gradient-to-r from-cyan to-purple text-white'
+                            : 'text-white/70 hover:text-white'
                           }`}
                       >
                         {mode}
@@ -303,13 +303,9 @@ export function ARVRModal({ isOpen, onClose, title }: ARVRModalProps) {
                         Scan the QR code or use the AR Quick Look feature on iOS.
                       </p>
                       <div className="glass-morphism rounded-lg p-8 mb-4">
-
                         <div className="w-48 h-48 mx-auto bg-white/10 rounded-lg flex items-center justify-center">
-
                           <span className="text-white/50 font-inter text-sm">QR Code Placeholder</span>
-
                         </div>
-
                       </div>
                       <button className="px-6 py-3 bg-gradient-to-r from-cyan to-purple rounded-lg text-white font-inter font-semibold neon-glow-cyan hover:scale-105 transition-transform">
                         Launch AR on Mobile
@@ -317,6 +313,7 @@ export function ARVRModal({ isOpen, onClose, title }: ARVRModalProps) {
                     </div>
                   </div>
                 )}
+
 
                 {/* VR View */}
                 {viewMode === 'vr' && (
@@ -331,31 +328,18 @@ export function ARVRModal({ isOpen, onClose, title }: ARVRModalProps) {
                         Connect your VR headset to begin.
                       </p>
                       <ul className="text-left text-white/70 font-inter space-y-2 mb-6">
-
                         <li className="flex items-center gap-2">
-
                           <span className="w-2 h-2 rounded-full bg-cyan"></span>
-
                           Meta Quest / Quest 2 Compatible
-
                         </li>
-
                         <li className="flex items-center gap-2">
-
                           <span className="w-2 h-2 rounded-full bg-purple"></span>
-
                           HTC Vive / Valve Index Support
-
                         </li>
-
                         <li className="flex items-center gap-2">
-
                           <span className="w-2 h-2 rounded-full bg-cyan"></span>
-
                           WebXR Browser Required
-
                         </li>
-
                       </ul>
                       <button className="px-6 py-3 bg-gradient-to-r from-cyan to-purple rounded-lg text-white font-inter font-semibold neon-glow-cyan hover:scale-105 transition-transform">
                         Enter VR Mode

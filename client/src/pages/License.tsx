@@ -1,6 +1,23 @@
+import { useNavigate } from "react-router-dom";
+import { X } from 'lucide-react';
+
+
 export default function License() {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-navy text-white py-20 px-6 md:px-20">
+
+      <button
+        onClick={() => navigate("/")}
+        className="fixed top-6 right-6 z-50 flex items-center justify-center
+                   bg-red-600/20 hover:bg-red-600/40 text-red-500 border border-red-500/50
+                   rounded-full w-10 h-10 transition-all duration-300
+                   hover:scale-110 hover:shadow-[0_0_15px_#ff000080]"
+        aria-label="Close and return to main page"
+      >
+        <X className="w-6 h-6" />
+      </button>
+
       <div className="max-w-4xl mx-auto space-y-6">
         <h1 className="text-4xl font-orbitron font-bold text-cyan mb-6">
           Software License Agreement

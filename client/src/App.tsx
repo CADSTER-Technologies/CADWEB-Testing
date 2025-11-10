@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "./components/ThemeProvider";
 import Navigation from "./components/Navigation";
 import HeroSection from "./components/HeroSection";
@@ -9,15 +9,18 @@ import PortfolioSection from "./components/PortfolioSection";
 import TechnologySection from "./components/TechnologySection";
 import DataFlowSection from "./components/DataFlowSection";
 import ModelViewer from "./components/ModelViewer";
-//import TestimonialsSection from "./components/TestimonialsSection";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
 
-// New pages
+// Product pages
+import ProductsPage from "./pages/ProductsPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
+import ProductViewerPage from "./pages/ProductViewerPage";
+
+// Legal pages
 import LicensePage from "./pages/License";
 import TermsPage from "./pages/Terms";
 import PrivacyPage from "./pages/Privacy";
-import ProductsPage from "./pages/Products";
 
 function HomePage() {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
@@ -38,7 +41,6 @@ function HomePage() {
           background: `radial-gradient(600px circle at ${cursorPosition.x}px ${cursorPosition.y}px, rgba(0, 225, 255, 0.05), transparent 40%)`,
         }}
       />
-
       <Navigation />
       <HeroSection />
       <AboutSection />
@@ -46,28 +48,33 @@ function HomePage() {
       <PortfolioSection />
       <TechnologySection />
       <DataFlowSection />
-      <ModelViewer
-        title="3D CAD Visualization"
-        description="Experience next-generation CAD model visualization with WebGL-powered rendering"
-      />
+      <ModelViewer />
       <ContactSection />
       <Footer />
     </div>
   );
 }
-//if needed should add the testimonials section <TestimonialsSection />
-function App() {
+
+export default function App() {
   return (
     <ThemeProvider>
       <Routes>
+        {/* Home */}
         <Route path="/" element={<HomePage />} />
+
+        {/* Products flow */}
         <Route path="/products" element={<ProductsPage />} />
+        <Route path="/products/:id" element={<ProductDetailPage />} />
+        <Route path="/products/:id/viewer" element={<ProductViewerPage />} />
+
+        {/* Legal */}
         <Route path="/license" element={<LicensePage />} />
         <Route path="/terms" element={<TermsPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
+
+        {/* Optional: redirect unknown paths to /products */}
+        <Route path="*" element={<Navigate to="/products" replace />} />
       </Routes>
     </ThemeProvider>
   );
 }
-
-export default App;

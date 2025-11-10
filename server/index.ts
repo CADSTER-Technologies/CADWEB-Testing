@@ -1,20 +1,26 @@
+// Load env (root .env recommended)
 import 'dotenv/config';
-import express, { type Request, Response, NextFunction } from "express";
+
+import express, { type Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+import { registerRoutes } from './routes';
+import { setupVite, serveStatic, log } from './vite';
 
 const app = express();
 
-// Middleware - CORS and JSON parsing
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: false, limit: '10mb' }));
-app.use(cors({ origin: true, credentials: true }));
+// CORS for local dev frontend at 5173
+app.use(cors({
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
-console.log('🚀 Server starting...');
-console.log('✅ RESEND API Key:', Boolean(process.env.RESEND_API_KEY) ? 'Present' : '❌ MISSING');
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-// Request logging middleware
+console.log('RESEND key present:', Boolean(process.env.RESEND_API_KEY));
+
+// Lightweight API access log
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -28,14 +34,12 @@ app.use((req, res, next) => {
 
   res.on('finish', () => {
     const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
+    if (path.startsWith('/api')) {
       let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
+      if (logLine.length > 80) logLine = logLine.slice(0, 79) + '…';
       log(logLine);
     }
   });
@@ -44,42 +48,27 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  try {
-    // Register all routes FIRST
-    const server = await registerRoutes(app);
+  const server = await registerRoutes(app);
 
-    // Error handler - MUST be after routes but BEFORE Vite/Static
-    app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-      const status = err.status || err.statusCode || 500;
-      const message = err.message || "Internal Server Error";
+  // Central error handler
+  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+    const status = err.status || err.statusCode || 500;
+    const message = err.message || 'Internal Server Error';
+    res.status(status).json({ message });
+    // Keep throwing to surface in logs during dev
+    throw err;
+  });
 
-      console.error('❌ Error:', { status, message });
-
-      res.status(status).json({
-        success: false,
-        message,
-        ...(process.env.NODE_ENV === 'development' && { error: err.stack })
-      });
-    });
-
-    // Vite or Static serving LAST
-    if (app.get("env") === "development") {
-      await setupVite(app, server);
-    } else {
-      serveStatic(app);
-    }
-
-    const port = Number(process.env.PORT) || 5000;
-    server.listen(
-      { port, host: '0.0.0.0' },
-      () => {
-        log(`✅ Server running on http://0.0.0.0:${port}`);
-        log(`📧 Contact API: POST /api/contact`);
-        log(`🌐 CORS: All origins allowed`);
-      }
-    );
-  } catch (error) {
-    console.error('❌ Failed to start server:', error);
-    process.exit(1);
+  if (app.get('env') === 'development') {
+    await setupVite(app, server);
+  } else {
+    serveStatic(app);
   }
+
+  // Render support + local fallback
+  const port = Number(process.env.PORT) || 5000;
+  server.listen(
+    { port, host: '0.0.0.0' },
+    () => { log(`serving on port ${port}`); }
+  );
 })();

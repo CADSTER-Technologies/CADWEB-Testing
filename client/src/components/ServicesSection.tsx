@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
-import { FiSettings, FiZap, FiBox, FiEye, FiDatabase } from 'react-icons/fi';
+import { FiSettings, FiZap, FiBox, FiEye, FiDatabase, FiCpu } from 'react-icons/fi';
 import { CanvasErrorBoundary } from './CanvasErrorBoundary';
 
 function FloatingCard3D({ isHovered }: { isHovered: boolean }) {
@@ -50,7 +50,7 @@ function ServiceCard({ icon, title, description, index }: ServiceCardProps) {
       className="relative group"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-cyan/20 to-purple/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
+
       <div className="relative h-full glass-morphism rounded-xl p-6 hover:neon-glow-cyan transition-all duration-300 cursor-pointer">
         <div className="absolute top-0 right-0 w-32 h-32 opacity-30">
           <CanvasErrorBoundary>
@@ -107,6 +107,13 @@ export default function ServicesSection() {
       title: 'CAD Data Migration',
       description: 'Seamless migration of legacy CAD data to modern platforms with data integrity assurance.',
     },
+    {
+      icon: <FiCpu />,
+      title: 'AI',
+      description:
+        'Harness the power of AI to optimize design workflows, predict errors & automate complex tasks for smarter, faster innovation.',
+    },
+
   ];
 
   return (

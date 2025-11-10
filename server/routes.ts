@@ -1,20 +1,14 @@
-import type { Express, Request, Response } from "express";
+import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { contactHandler } from "./contact";
 
+/**
+ * Registers all API routes on the provided Express app and
+ * returns the underlying HTTP server instance.
+ */
 export async function registerRoutes(app: Express): Promise<Server> {
-  // POST endpoint for contact form
-  app.post("/api/contact", async (req: Request, res: Response) => {
-    try {
-      await contactHandler(req, res);
-    } catch (err: any) {
-      console.error('❌ [ROUTES] Unhandled error in contactHandler:', err);
-      res.status(500).json({
-        success: false,
-        message: 'Server error occurred',
-      });
-    }
-  });
+  // Contact endpoint — uses your Resend-backed handler
+  app.post("/api/contact", contactHandler);
 
   const httpServer = createServer(app);
   return httpServer;

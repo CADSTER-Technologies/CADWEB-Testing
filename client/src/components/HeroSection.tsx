@@ -1,120 +1,255 @@
 import { useRef, useMemo, useState } from 'react';
+
 import { Canvas, useFrame } from '@react-three/fiber';
+
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+
 import { motion } from 'framer-motion';
+
 import * as THREE from 'three';
+
 import { VideoModal } from './VideoModal';
+
 import { CanvasErrorBoundary } from './CanvasErrorBoundary';
 
-function CADWireframe() {
+import { useIsMobile } from '../hooks/use-is-mobile';
+
+
+
+function CADWireframe({ isMobile = false }: { isMobile?: boolean }) {
+
   const meshRef = useRef<THREE.Group>(null);
+
   const linesRef = useRef<THREE.LineSegments>(null);
 
+
+
   const geometry = useMemo(() => {
+
     const vertices: number[] = [];
+
     const size = 3;
+
     const divisions = 20;
 
+
+
     for (let i = 0; i <= divisions; i++) {
+
       const t = (i / divisions) * Math.PI * 2;
+
       const x = Math.cos(t) * size;
+
       const y = Math.sin(t) * size;
+
       vertices.push(x, y, 2, x, y, -2);
+
+
+
       const x2 = Math.cos(t) * (size * 0.5);
+
       const y2 = Math.sin(t) * (size * 0.5);
+
       vertices.push(x2, y2, 2, x2, y2, -2);
+
     }
+
+
 
     for (let i = 0; i < 10; i++) {
+
       const angle = (i / 10) * Math.PI * 2;
+
       const x = Math.cos(angle) * size;
+
       const y = Math.sin(angle) * size;
+
       vertices.push(0, 0, 2, x, y, 2);
+
       vertices.push(0, 0, -2, x, y, -2);
+
     }
+
+
 
     const geom = new THREE.BufferGeometry();
+
     geom.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+
     return geom;
+
   }, []);
 
+
+
   useFrame((state) => {
+
     if (meshRef.current) {
-      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.2) * 0.2;
-      meshRef.current.rotation.y += 0.005;
+
+      // Slightly reduce motion on mobile to keep things calmer
+
+      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.2) * (isMobile ? 0.15 : 0.2);
+
+      meshRef.current.rotation.y += isMobile ? 0.004 : 0.005;
+
     }
+
     if (linesRef.current) {
+
       const material = linesRef.current.material as THREE.LineBasicMaterial;
+
       material.opacity = 0.6 + Math.sin(state.clock.elapsedTime * 2) * 0.2;
+
     }
+
   });
 
+
+
   return (
+
     <group ref={meshRef}>
+
       <lineSegments ref={linesRef} geometry={geometry}>
+
         <lineBasicMaterial color="#00E1FF" transparent opacity={0.8} />
+
       </lineSegments>
+
+
+
       <mesh position={[0, 0, 0]}>
+
         <boxGeometry args={[4, 4, 3]} />
+
         <meshBasicMaterial color="#7A00FF" wireframe opacity={0.3} transparent />
+
       </mesh>
+
+
 
       <mesh position={[0, 0, 0]} rotation={[0, Math.PI / 4, 0]}>
+
         <octahedronGeometry args={[2.5, 0]} />
+
         <meshBasicMaterial color="#00E1FF" wireframe opacity={0.4} transparent />
+
       </mesh>
 
+
+
       {[...Array(8)].map((_, i) => {
+
         const angle = (i / 8) * Math.PI * 2;
+
         const radius = 4;
+
         return (
+
           <mesh key={i} position={[Math.cos(angle) * radius, Math.sin(angle) * radius, 0]}>
+
             <sphereGeometry args={[0.1, 8, 8]} />
+
             <meshBasicMaterial color="#00E1FF" />
+
           </mesh>
+
         );
+
       })}
+
     </group>
+
   );
+
 }
 
+
+
 export default function HeroSection() {
+
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
+  const isMobile = useIsMobile();
+
+  const tiny = useMemo(() => {
+
+    if (typeof window === 'undefined' || typeof window.matchMedia === 'undefined') return false;
+
+    return window.matchMedia('(max-width: 379px)').matches;
+
+  }, [isMobile]);
+
+
+
   return (
+
     <>
+
       <VideoModal isOpen={isVideoModalOpen} onClose={() => setIsVideoModalOpen(false)} />
+
       <section id="home" className="relative h-screen w-full overflow-hidden bg-gradient-to-b from-navy via-graphite to-navy">
+
         <div className="absolute inset-0">
+
           <CanvasErrorBoundary>
-            <Canvas>
-              <PerspectiveCamera makeDefault position={[0, 0, 10]} />
+
+            <Canvas dpr={isMobile ? [1, 1.75] : [1, 2]} gl={{ antialias: !isMobile, alpha: true, powerPreference: isMobile ? 'low-power' : 'high-performance' }} resize={{ scroll: false }} style={{ touchAction: 'none' }} >
+
+              <PerspectiveCamera makeDefault position={[0, 0, isMobile ? 11 : 10]} />
+
               <OrbitControls
+
                 enableZoom={false}
+
                 enablePan={false}
-                autoRotate
+
+                autoRotate={!tiny}
+
                 autoRotateSpeed={0.5}
+
                 maxPolarAngle={Math.PI / 2}
+
                 minPolarAngle={Math.PI / 2}
+
               />
+
               <ambientLight intensity={0.5} />
+
               <pointLight position={[10, 10, 10]} intensity={1} color="#00E1FF" />
+
               <pointLight position={[-10, -10, 10]} intensity={0.5} color="#7A00FF" />
+
               <CADWireframe />
+
             </Canvas>
+
           </CanvasErrorBoundary>
+
         </div>
+
+
+
+
 
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-navy/50 to-navy" />
 
+
+
         <div className="relative z-10 h-full flex items-center justify-center px-4">
+
           <div className="max-w-5xl mx-auto text-center">
+
             <motion.h1
+
               initial={{ opacity: 0, y: 30 }}
+
               animate={{ opacity: 1, y: 0 }}
+
               transition={{ duration: 0.8 }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-6xl font-orbitron font-bold mb-6 text-glow-cyan"          >
-              Engineering the Future of{' '}
+              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-orbitron font-bold mb-6 text-glow-cyan"
+
+            >              Engineering the Future of{' '}
               <span className="bg-gradient-to-r from-cyan to-purple bg-clip-text text-transparent">
                 Design Automation
               </span>
@@ -126,8 +261,7 @@ export default function HeroSection() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-lg sm:text-xl md:text-2xl font-inter text-white/80 mb-8 max-w-3xl mx-auto"
             >
-              CAD / PLM Automation • Customization • 3D Visualization • AR / VR Solutions
-            </motion.p>
+              CAD / PLM Automation • Customization • 3D Visualization • AR / VR • AI             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 30 }}

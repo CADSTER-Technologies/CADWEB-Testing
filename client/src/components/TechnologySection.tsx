@@ -3,28 +3,17 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import { CanvasErrorBoundary } from './CanvasErrorBoundary';
-import ImageLogo from './ImageLogo';
+import ImageLogo from './ImageLogo'; // adjust import path if different
+// If you decide to use 3D per-card again later: import LogoModel from './LogoModel';
 
 function FloatingTechIcons() {
   const groupRef = useRef<THREE.Group>(null);
+  useFrame(() => { if (groupRef.current) groupRef.current.rotation.y += 0.003; });
 
-  useFrame(() => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += 0.003;
-    }
-  });
-
-  const positions = [
-    [3, 2, 0],
-    [-3, 2, 0],
-    [3, -2, 0],
-    [-3, -2, 0],
-    [0, 3, 0],
-    [0, -3, 0],
-    [2, 0, 2],
-    [-2, 0, 2],
+  const positions: [number, number, number][] = [
+    [3, 2, 0], [-3, 2, 0], [3, -2, 0], [-3, -2, 0],
+    [0, 3, 0], [0, -3, 0], [2, 0, 2], [-2, 0, 2]
   ];
-
 
   return (
     <group ref={groupRef}>
@@ -76,10 +65,7 @@ export default function TechnologySection() {
   ];
 
   return (
-    <section
-      id="technology"
-      className="relative py-20 md:py-32 bg-gradient-to-b from-navy via-graphite to-navy overflow-hidden"
-    >
+    <section id="technology" className="relative py-20 md:py-32 bg-gradient-to-b from-navy via-graphite to-navy overflow-hidden">
       <div className="absolute inset-0 opacity-30">
         <CanvasErrorBoundary>
           <Canvas camera={{ position: [0, 0, 12], fov: 60 }}>
@@ -90,6 +76,7 @@ export default function TechnologySection() {
           </Canvas>
         </CanvasErrorBoundary>
       </div>
+
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -127,7 +114,8 @@ export default function TechnologySection() {
                   height={84}
                   aspect={logoMeta[tech.name].aspect}
                 />
-                <h3 className="text-lg font-orbitron font-bold text-white group-hover:text-cyan transition-colors mt-2">                  {tech.name}
+                <h3 className="text-lg font-orbitron font-bold text-white group-hover:text-cyan transition-colors mt-2">
+                  {tech.name}
                 </h3>
               </div>
             </motion.div>
@@ -155,3 +143,4 @@ export default function TechnologySection() {
     </section>
   );
 }
+
