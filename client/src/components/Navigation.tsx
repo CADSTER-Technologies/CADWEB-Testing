@@ -213,13 +213,6 @@ inline-block"
               </motion.a>
             ))}
 
-            <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="px-6 py-2 bg-gradient-to-r from-cyan to-purple rounded-lg text-white font-inter text-sm neon-glow-cyan hover:scale-105 transition-transform"
-            >
-              Get Started
-            </motion.button>
           </div>
 
           <div className="md:hidden">
