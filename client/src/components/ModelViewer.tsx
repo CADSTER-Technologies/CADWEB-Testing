@@ -175,7 +175,7 @@ export default function ModelViewer() {
     return window.matchMedia('(max-width: 379px)').matches;
   }, [isMobile]);
   return (
-    <section id="model-viewer" className="relative py-16 sm:py-24 md:py-32 overflow-hidden bg-gradient-to-b from-gray/950 via-gray/900 to-gray/950">
+    <section id="model-viewer" className="relative min-h-screen py-16 sm:py-24 md:py-32 overflow-hidden bg-gradient-to-b from-navy via-graphite to-navy">
       <div className="container mx-auto px-6 relative">
         {/* Title & Description */}
         <motion.div
@@ -271,7 +271,7 @@ export default function ModelViewer() {
             </div>
 
             {/* 3D Canvas */}
-            <div className="relative h-[48vh] xs:h-[52vh] sm:h-[58vh] md:h-[65vh] bg-gradient-to-b from-gray-900 to-black">
+            <div className="relative h-[48vh] xs:h-[52vh] sm:h-[58vh] md:h-[65vh] ">
               {viewMode === '3d' && (
                 <CanvasErrorBoundary>
                   <Canvas

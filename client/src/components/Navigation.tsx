@@ -152,7 +152,7 @@ export default function Navigation() {
           >
             <div
               ref={logoRef}
-              className={`w-10 h-10 rounded-lg flex items-center justify-center transition-shadow ${reveal ? "shadow-[0_0_18px_#1e88e5]" : ""
+              className={`w-10 h-10 rounded-lg flex items-center justify-center
                 } cursor-pointer md:cursor-default flex-shrink-0`}
             >
               <img
