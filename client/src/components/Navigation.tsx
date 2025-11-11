@@ -317,12 +317,6 @@ inline-block"
                     {item.name}
                   </a>
                 ))}
-                <button
-                  onClick={closeMenu}
-                  className="mt-2 px-4 py-3 rounded bg-gradient-to-r from-cyan to-purple text-white neon-glow-cyan"
-                >
-                  Get Started
-                </button>
               </nav>
             </motion.div>
           </>
