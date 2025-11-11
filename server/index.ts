@@ -20,6 +20,15 @@ app.use(express.urlencoded({ extended: false }));
 
 console.log('RESEND key present:', Boolean(process.env.RESEND_API_KEY));
 
+// ✅ Add this health check endpoint
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Lightweight API access log
 app.use((req, res, next) => {
   const start = Date.now();
