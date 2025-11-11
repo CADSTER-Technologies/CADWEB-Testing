@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { routes } from '../routes';
+import { routes } from '@/routes';
 
 type Product = {
   id: string;
@@ -64,12 +64,12 @@ export default function ProductsPage() {
   };
 
   return (
-    <section id="product" className="relative py-20 md:py-28 bg-gradient-to-b from-navy via-graphite to-navy">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="product" className="relative min-h-screen w-full overflow-x-hidden bg-gradient-to-b from-navy via-graphite to-navy py-20 md:py-28" >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[calc(100vh- theme(space.20)*2)] md:min-h-[calc(100vh- theme(space.28)*2)] flex flex-col">
         {/* Back */}
         <div className="mb-8">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/")}
             className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 bg-white/10 hover:bg-white/15 text-white/90 backdrop-blur-md border border-white/20 transition transform hover:-translate-x-0.5 hover:shadow-lg shadow-[0_8px_30px_rgba(0,0,0,0.15)]"
           >
             <span className="inline-block h-2.5 w-2.5 rounded-full bg-gradient-to-r from-pink-500 to-violet-500" />
@@ -79,13 +79,13 @@ export default function ProductsPage() {
 
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-orbitron font-bold text-white">
-            Products <span className="text-transparent bg-clip-text bg-[linear-gradient(90deg,#e53935_0%,#43a047_45%,#1e88e5_85%,#43a047_100%)]">Catalog</span>
+            Products  Catalog
           </h2>
           <p className="text-white/70 font-inter mt-3">Hover to preview • Click Viewer to open details</p>
         </div>
 
         <LayoutGroup>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start flex-1">
             {PRODUCTS.map((p) => {
               const isHover = hoverId === p.id;
               return (

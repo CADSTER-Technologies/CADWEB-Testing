@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiChevronLeft, FiChevronRight, FiEye } from 'react-icons/fi';
@@ -45,25 +45,25 @@ export default function PortfolioSection() {
       title: 'Automotive Assembly Configurator',
       category: '3D Visualization',
       description: 'Interactive 3D configurator for automotive assembly line optimization with real-time collision detection.',
-      tech: ['SolidWorks', 'Unity', 'WebGL'],
+      tech: [],
     },
     {
       title: 'PLM Integration Suite',
       category: 'Workflow Automation',
       description: 'Enterprise-wide PLM integration connecting Windchill with legacy CAD systems across 15 departments.',
-      tech: ['Windchill', 'Creo', 'API Integration'],
+      tech: [],
     },
     {
       title: 'AR Product Visualization',
       category: 'AR/VR ',
       description: 'Augmented reality product visualization app for industrial equipment with interactive annotations.',
-      tech: ['Unity', 'ARCore', 'AutoCAD'],
+      tech: [],
     },
     {
       title: 'BIM Data Migration',
       category: 'Data Migration',
       description: 'Large-scale BIM data migration from legacy formats to Revit with automated quality checks.',
-      tech: ['Revit', 'AutoCAD', 'Python'],
+      tech: [],
     },
   ];
 
@@ -74,6 +74,14 @@ export default function PortfolioSection() {
   const prevProject = () => {
     setCurrentIndex((prev) => (prev - 1 + projects.length) % projects.length);
   };
+
+  // ✅ Auto move every 4 seconds (no pause on hover)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % projects.length);
+    }, 3500); // ← changed from 3000ms to 4000ms
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
